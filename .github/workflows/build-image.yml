@@ -1,0 +1,64 @@
+name: بناء نظام Alharthia OS
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: تجهيز الواجهة والخطوط
+        run: |
+          python3 ui-src/build.py
+          bash tools/fetch-fonts.sh || true
+          rm -rf stage-alharthia/01-shell/files/app
+          cp -r shell stage-alharthia/01-shell/files/app
+          chmod +x stage-alharthia/prerun.sh stage-alharthia/*/*.sh stage-alharthia/01-shell/files/alharthia-session stage-alharthia/01-shell/files/alharthia-keyboard-setup
+
+      - name: بناء صورة النظام
+        id: build
+        uses: usimd/pi-gen-action@v1
+        with:
+          image-name: alharthia-os
+          stage-list: stage0 stage1 stage2 ./stage-alharthia
+          pi-gen-version: arm64
+          release: trixie
+          hostname: alharthia
+          username: teacher
+          password: ${{ secrets.OS_PASSWORD || 'alharthia' }}
+          disable-first-boot-user-rename: 1
+          enable-ssh: 1
+          locale: en_US.UTF-8
+          timezone: Asia/Baghdad
+          keyboard-keymap: us
+          keyboard-layout: English (US)
+          wpa-country: IQ
+          compression: xz
+          verbose-output: true
+          increase-runner-disk-size: false
+
+      - name: رفع الصورة
+        uses: actions/upload-artifact@v4
+        with:
+          name: alharthia-os-image
+          path: ${{ steps.build.outputs.image-path }}
+          compression-level: 0
+          retention-days: 14
+
+      - name: نشر إصدار (عند وضع tag)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.build.outputs.image-path }}

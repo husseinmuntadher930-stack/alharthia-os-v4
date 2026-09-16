@@ -1,0 +1,15 @@
+#!/bin/sh
+# Starts the Alharthia system service and the full-screen interface, and restarts them if they stop.
+# If the Qt window keeps crashing, it switches to Chromium kiosk mode so the teacher always gets the interface.
+cd /opt/alharthia || exit 1
+export LANG=ar_IQ.UTF-8
+( while true; do python3 /opt/alharthia/alharthia_server.py; sleep 1; done ) &
+sleep 0.5
+fails=0
+while true; do
+	start=$(date +%s)
+	python3 /opt/alharthia/alharthia_host.py
+	if [ $(( $(date +%s) - start )) -lt 15 ]; then fails=$((fails + 1)); else fails=0; fi
+	if [ "$fails" -ge 3 ]; then export ALH_FORCE_CHROMIUM=1; fi
+	sleep 1
+done

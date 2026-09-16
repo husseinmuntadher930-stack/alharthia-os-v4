@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Alharthia keyboard</title>
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<style>
+:root{--acc:#f0703e;--font:"IBM Plex Sans Arabic","Noto Sans Arabic UI","Noto Sans Arabic","Segoe UI",Tahoma,sans-serif;color-scheme:light}
+html[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:transparent;font-family:var(--font);-webkit-user-select:none;user-select:none}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;padding:0}
+svg.i{width:1em;height:1em;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none;display:block}
+[hidden]{display:none!important}
+/*__OSK_CSS__*/
+#osk{box-shadow:none}
+</style>
+</head>
+<body>
+<script>
+"use strict";
+/*__CORE__*/
+window.OSK_EXT={
+  send(o){ const s=JSON.stringify(o); try{ window.webkit.messageHandlers.osk.postMessage(s); }catch(e){ (window.OSK_LOG=window.OSK_LOG||[]).push(o); } },
+  text(v){ this.send({type:'text',v}); }, key(v){ this.send({type:'key',v}); },
+  combo(mods,v,isKey){ this.send({type:'combo',mods,v,isKey:!!isKey}); },
+  hide(){ this.send({type:'hide'}); }, height(v){ if(v>0) this.send({type:'height',v}); }
+};
+const S={kbdLangs:['ar','en','fr'],kbdLang:'ar',oskMode:'auto',oskSize:'m',oskPreview:true,oskTermKeys:true,ar:true,clickSound:false,emojiRecent:[]};
+let saveT=0;
+function save(){ clearTimeout(saveT); saveT=setTimeout(()=>OSK_EXT.send({type:'state',lang:S.kbdLang,emojiRecent:S.emojiRecent||[]}),300); }
+function toast(){} function go(){}
+</script>
+<script>
+"use strict";
+/*__KEYBOARD__*/
+</script>
+<script>
+"use strict";
+const OSKX={
+  apply(st){
+    if(!st) return;
+    if(Array.isArray(st.langs)&&st.langs.length) S.kbdLangs=st.langs;
+    if(st.lang) S.kbdLang=st.lang;
+    if(st.size) S.oskSize=st.size;
+    S.oskPreview=st.preview!==false; S.oskTermKeys=st.termKeys!==false; S.ar=st.ar!==false; S.clickSound=!!st.clickSound;
+    if(Array.isArray(st.emojiRecent)) S.emojiRecent=st.emojiRecent;
+    document.documentElement.dataset.theme=st.dark?'dark':'light';
+    if(st.acc) document.documentElement.style.setProperty('--acc',st.acc);
+    if(!Keyboard.enabledLangs().includes(Keyboard.lang)) Keyboard.lang=Keyboard.enabledLangs()[0];
+    if(st.lang&&Keyboard.enabledLangs().includes(st.lang)) Keyboard.lang=st.lang;
+    Keyboard.el.className='osk-'+(S.oskSize||'m');
+    Keyboard.render(); Keyboard.fit();
+  },
+  open(){ Keyboard.shift=0; Keyboard.page='abc'; Keyboard.show(); },
+  close(){ const el=Keyboard.el; el.hidden=true; Keyboard.closeAlt(); Keyboard.page='abc'; }
+};
+Keyboard.init();
+Keyboard.show();
+OSK_EXT.send({type:'ready'});
+</script>
+</body>
+</html>

@@ -1,0 +1,395 @@
+<body>
+<div id="os">
+  <header id="topbar">
+    <div class="tb-start">
+      <button class="tb-btn" id="tbHome" hidden data-go="home"><svg class="i" data-i="home"></svg><span>الرئيسية</span></button>
+      <button class="tb-btn" id="tbApps" hidden data-go="apps"><svg class="i" data-i="apps"></svg><span>التطبيقات</span></button>
+      <div class="wordmark" id="tbMark"><img class="s-logo" alt="">Alharthia <b>OS</b></div>
+      <span id="tbTitle" hidden></span>
+    </div>
+    <div id="tbClock"></div>
+    <div class="tb-end">
+      <button class="tb-chip" id="tbTimer" hidden data-go="timer"><svg class="i" data-i="timer"></svg><span></span></button>
+      <button class="tb-btn" id="tbUsb" data-go="files" data-arg="usb" title="الفلاشة"><svg class="i" data-i="usb"></svg></button>
+      <button class="tb-btn" id="tbKbd" title="كيبورد الشاشة (تشغيل / إطفاء)"></button>
+      <button class="status-group" data-qp title="الاتصالات">
+        <span class="tb-btn st-bt"><svg class="i" data-i="bluetooth"></svg></span>
+        <span class="tb-btn st-wifi"><svg class="i wf" viewBox="0 0 24 24"><path class="w3" d="M2 8.5a15 15 0 0 1 20 0"/><path class="w2" d="M5 12a10 10 0 0 1 14 0"/><path class="w1" d="M8.5 15.5a5 5 0 0 1 7 0"/><path class="w0" d="M12 19h.01" stroke-width="3"/><path class="wx" d="M3 3l18 18" style="display:none"/></svg></span>
+        <span class="tb-btn"><svg class="i" data-i="vol"></svg></span>
+      </button>
+      <button class="tb-btn" id="tbPower" title="التشغيل"><svg class="i" data-i="power"></svg></button>
+    </div>
+  </header>
+
+  <main id="screens">
+    <!-- ================= HOME ================= -->
+    <section class="screen on" id="home">
+      <div class="wall navy" id="homeWall"></div><div class="pattern"></div>
+      <div id="desk">
+        <img id="bLogo" class="brand-item" alt="شعار المدرسة" draggable="false">
+        <div id="bText" class="brand-item b-text"><div class="b-school"></div><div class="b-class"></div><div class="b-bar"></div></div>
+        <div id="clockW"><div class="cw-time"></div><div class="cw-date"></div><div class="cw-timer" id="cwTimer" hidden><svg class="i" data-i="timer"></svg><span></span></div></div>
+        <div id="dragBar" hidden>
+          <span class="msg">اسحب الشعار أو النص لأي مكان</span>
+          <button class="pill-btn" id="dSmaller" title="تصغير"><svg class="i" data-i="minus"></svg></button>
+          <button class="pill-btn" id="dBigger" title="تكبير"><svg class="i" data-i="plus"></svg></button>
+          <button class="pill-btn primary" id="dDone"><svg class="i" data-i="check"></svg>تم</button>
+        </div>
+      </div>
+      <nav id="dock"><div class="dock-in" id="dockIn"></div></nav>
+    </section>
+
+    <!-- ================= APPS ================= -->
+    <section class="screen app" id="apps"><div class="main" id="appsMain"></div></section>
+
+    <!-- ================= WHITEBOARD ================= -->
+    <section class="screen" id="board" data-immersive>
+      <div class="strip" id="boardStrip">
+        <img alt="" class="s-logo">
+        <span class="s-school"></span><span class="dot"></span><span class="s-class"></span>
+        <span class="grow"></span>
+        <button class="tb-chip" data-go="timer" hidden><svg class="i" data-i="timer"></svg><span></span></button>
+        <button class="st" data-qp title="الاتصالات"><span class="st-bt"><svg class="i" data-i="bluetooth"></svg></span><span class="st-wifi"><svg class="i" data-i="wifi"></svg></span></button>
+        <span class="s-info" id="bInfo"></span>
+        <span class="s-clock"></span>
+      </div>
+      <div id="boardArea">
+        <canvas id="bdBg"></canvas><canvas id="bdBase"></canvas><canvas id="bdLive"></canvas>
+        <div id="instLayer"></div>
+        <div id="marquee" hidden></div>
+        <div id="selBox" hidden><div class="body"></div><div class="stem"></div>
+          <div class="h rot" data-h="rot"></div><div class="h" data-h="nw" style="left:0;top:0"></div><div class="h" data-h="ne" style="left:100%;top:0"></div><div class="h" data-h="sw" style="left:0;top:100%"></div><div class="h" data-h="se" style="left:100%;top:100%"></div></div>
+        <div id="selMenu" hidden>
+          <button data-sel="color"><svg class="i" data-i="palette"></svg>تلوين</button>
+          <button data-sel="dup"><svg class="i" data-i="copy"></svg>تكرار</button>
+          <button data-sel="front"><svg class="i" data-i="pages"></svg>للأمام</button>
+          <button data-sel="del" class="red"><svg class="i" data-i="trash"></svg>حذف</button>
+        </div>
+        <button id="focusBtn" data-act="focus"><svg class="i" data-i="chevUp"></svg>إظهار الأدوات</button>
+      </div>
+      <div id="boardDock">
+        <button class="dbtn home" data-go="home"><svg class="i" data-i="home"></svg><span class="lb">الرئيسية</span></button>
+        <span class="dsep"></span>
+        <button class="dbtn" data-tool="select"><svg class="i" data-i="cursor"></svg><span class="lb">تحديد</span></button>
+        <button class="dbtn on" data-tool="ink" data-pop="pens" id="dPen"><svg class="i" data-i="pen"></svg><span class="lb">قلم</span><i class="car"></i></button>
+        <button class="dbtn" data-tool="eraser" data-pop="eraser" id="dEraser"><svg class="i" data-i="eraser"></svg><span class="lb">ممحاة</span><i class="car"></i></button>
+        <button class="dbtn" data-tool="text"><svg class="i" data-i="textT"></svg><span class="lb">نص</span></button>
+        <button class="dbtn" data-tool="shape" data-pop="shapes" id="dShape"><svg class="i" data-i="shapes"></svg><span class="lb">أشكال</span><i class="car"></i></button>
+        <button class="dbtn" data-pop="geo" id="dGeo"><svg class="i" data-i="setsq"></svg><span class="lb">أدوات هندسية</span><i class="car"></i></button>
+        <button class="dbtn" data-act="image"><svg class="i" data-i="image"></svg><span class="lb">صورة</span></button>
+        <span class="dsep"></span>
+        <button class="dbtn toggle" data-act="assist" id="dAssist"><svg class="i" data-i="straight"></svg><span class="lb">خط مستقيم</span></button>
+        <span class="dsep"></span>
+        <div class="sws" id="dSw"></div>
+        <button class="dbtn" data-act="eyedrop" id="dEye"><svg class="i" data-i="eyedrop"></svg><span class="lb">التقاط لون</span></button>
+        <button class="dbtn" data-pop="size" id="dSize"><span class="sizeprev"><i></i></span><span class="lb">السُمك</span></button>
+        <span class="dsep"></span>
+        <button class="dbtn" data-act="undo" id="dUndo"><svg class="i" data-i="undo"></svg><span class="lb">تراجع</span></button>
+        <button class="dbtn" data-act="redo" id="dRedo"><svg class="i" data-i="redo"></svg><span class="lb">إعادة</span></button>
+        <button class="dbtn" data-act="clear"><svg class="i" data-i="trash"></svg><span class="lb">مسح</span></button>
+        <span class="dsep"></span>
+        <button class="dbtn" data-pop="bg" id="dBg"><svg class="i" data-i="grid"></svg><span class="lb">نوع السبورة</span><i class="car"></i></button>
+        <button class="dbtn" data-act="prev" id="dPrev"><svg class="i" data-i="chevR"></svg><span class="lb">السابقة</span></button>
+        <button class="dbtn" data-pop="pages" id="dPages"><span class="pg" id="dPg">١/١</span><span class="lb">الصفحات</span></button>
+        <button class="dbtn" data-act="next" id="dNext"><svg class="i" data-i="chevL"></svg><span class="lb">التالية</span></button>
+        <button class="dbtn" data-act="add"><svg class="i" data-i="plus"></svg><span class="lb">صفحة جديدة</span></button>
+        <span class="dsep"></span>
+        <button class="dbtn" data-act="full" id="dFull"><svg class="i" data-i="fit"></svg><span class="lb">ملء الشاشة</span></button>
+        <button class="dbtn" data-pop="save"><svg class="i" data-i="save"></svg><span class="lb">حفظ</span><i class="car"></i></button>
+        <button class="dbtn" data-act="focus"><svg class="i" data-i="chevDown"></svg><span class="lb">إخفاء الأدوات</span></button>
+      </div>
+      <div class="bpop" id="bPop" hidden></div>
+      <input type="file" id="bImgFile" accept="image/*" hidden>
+      <input type="file" id="bBgFile" accept="image/*" hidden>
+    </section>
+
+    <!-- ================= PDF ================= -->
+    <section class="screen" id="pdf" data-immersive>
+      <div class="pdf-body">
+        <aside id="thumbs" hidden></aside>
+        <div id="pdfStage">
+          <div id="pageWrap" hidden><canvas id="pdfCanvas"></canvas><div id="pdfInk" class="off"><canvas></canvas></div></div>
+          <div id="pdfEmpty">
+            <div class="big"><svg class="i" data-i="pdf"></svg></div>
+            <h2>افتح ملف PDF</h2>
+            <p>من مستكشف الملفات أو الفلاشة — أو اسحب الملف وأفلته هنا</p>
+            <div class="btns" style="justify-content:center;margin-top:6px">
+              <button class="btn primary" data-go="files"><svg class="i" data-i="folder"></svg>مستكشف الملفات</button>
+              <button class="btn" data-act="pdfDevice"><svg class="i" data-i="upload"></svg>ملف من هذا الجهاز</button>
+            </div>
+          </div>
+          <div class="loading" id="pdfLoading" hidden><div class="spin"></div></div>
+        </div>
+      </div>
+      <input type="file" id="pdfFile" accept="application/pdf" hidden>
+      <div class="vbar" id="pdfBar">
+        <button class="dbtn home" data-go="home"><svg class="i" data-i="home"></svg></button>
+        <button class="dbtn" data-go="files" title="الملفات"><svg class="i" data-i="folder"></svg></button>
+        <button class="dbtn" id="pThumbsBtn" title="الصفحات"><svg class="i" data-i="sidebar"></svg></button>
+        <span class="name" id="pdfName"></span>
+        <span class="grow"></span>
+        <button class="dbtn" id="pPrev" title="السابقة"><svg class="i" data-i="chevR"></svg></button>
+        <span class="pg"><input id="pNum" inputmode="numeric" value="0"> <span id="pTot">/ ٠</span></span>
+        <button class="dbtn" id="pNext" title="التالية"><svg class="i" data-i="chevL"></svg></button>
+        <span class="dsep"></span>
+        <button class="dbtn" id="pZout" title="تصغير"><svg class="i" data-i="zoomOut"></svg></button>
+        <button class="dbtn" id="pFit" title="ملاءمة"><svg class="i" data-i="fitW"></svg></button>
+        <button class="dbtn" id="pZin" title="تكبير"><svg class="i" data-i="zoomIn"></svg></button>
+        <span class="dsep"></span>
+        <button class="dbtn toggle" id="pPen" title="الكتابة على الصفحة"><svg class="i" data-i="pen"></svg></button>
+        <div id="pInkTools" class="sws" hidden>
+          <div class="sws" id="pColors"></div>
+          <button class="dbtn" id="pHl" title="تظليل"><svg class="i" data-i="marker"></svg></button>
+          <button class="dbtn" id="pEraser" title="ممحاة"><svg class="i" data-i="eraser"></svg></button>
+          <button class="dbtn" id="pUndo" title="تراجع"><svg class="i" data-i="undo"></svg></button>
+          <button class="dbtn" id="pClear" title="مسح الكتابة"><svg class="i" data-i="trash"></svg></button>
+        </div>
+        <span class="grow"></span>
+        <button class="dbtn" id="pFull" title="ملء الشاشة"><svg class="i" data-i="fit"></svg></button>
+      </div>
+    </section>
+
+    <!-- ================= FILES ================= -->
+    <section class="screen app" id="files">
+      <div class="app-body"><aside class="side" id="fxSide"></aside><div class="main" id="fxMain"></div></div>
+      <input type="file" id="fxDevice" multiple hidden>
+    </section>
+
+    <!-- ================= OFFICE / VIEWERS ================= -->
+    <section class="screen app" id="office">
+      <div class="of-body"><aside class="sthumbs" id="ofThumbs" hidden></aside><div class="of-stage" id="ofStage"></div></div>
+      <div class="vbar" id="ofBar"></div>
+      <input type="file" id="ofFile" accept=".docx,.xlsx,.pptx,image/*" hidden>
+    </section>
+
+    <!-- ================= TERMINAL ================= -->
+    <section class="screen app" id="term">
+      <div class="btabs term-tabs"><div class="term-tablist" id="termTabs"></div>
+        <div class="term-tools">
+          <button class="icon-btn" data-tm="kbd" title="الكيبورد"><svg class="i" data-i="keyboard"></svg></button>
+          <button class="icon-btn" data-tm="copy" title="نسخ"><svg class="i" data-i="copy"></svg></button>
+          <button class="icon-btn" data-tm="paste" title="لصق"><svg class="i" data-i="paste"></svg></button>
+          <button class="icon-btn" data-tm="zout" title="تصغير الخط"><svg class="i" data-i="zoomOut"></svg></button>
+          <button class="icon-btn" data-tm="zin" title="تكبير الخط"><svg class="i" data-i="zoomIn"></svg></button>
+          <button class="icon-btn" data-tm="clear" title="مسح الشاشة"><svg class="i" data-i="clean"></svg></button>
+          <button class="icon-btn" data-tm="foot" title="فتح الطرفية بنافذة منفصلة (foot)"><svg class="i" data-i="external"></svg></button>
+        </div></div>
+      <div class="term-body" id="termBody"></div>
+    </section>
+
+    <!-- ================= MEDIA PLAYER ================= -->
+    <section class="screen app" id="media">
+      <div class="md-body"><div class="md-stage" id="mdStage"></div><aside class="md-list" id="mdList" hidden></aside></div>
+      <div class="md-bar" id="mdBar"></div>
+      <input type="file" id="mdFile" data-paths="1" accept="video/*,audio/*,.mkv,.mp3,.mp4,.m4a,.flac,.ogg,.wav,.webm" multiple hidden>
+    </section>
+
+    <!-- ================= BROWSER ================= -->
+    <section class="screen app" id="browser">
+      <div class="btabs"><div class="btab"><svg class="i" data-i="globe"></svg>صفحة جديدة</div></div>
+      <div class="bchrome">
+        <button class="icon-btn" data-toast="لا توجد صفحة سابقة"><svg class="i" data-i="chevR"></svg></button>
+        <button class="icon-btn" data-toast="لا توجد صفحة تالية"><svg class="i" data-i="chevL"></svg></button>
+        <button class="icon-btn" data-toast="تم تحديث الصفحة"><svg class="i" data-i="restart"></svg></button>
+        <label class="url"><svg class="i" data-i="lock"></svg><input type="text" id="urlIn" placeholder="اكتب عنوان موقع" spellcheck="false"></label>
+      </div>
+      <div class="bstart">
+        <img alt="" class="s-logo">
+        <label class="bsearch"><svg class="i" data-i="search"></svg><input type="search" id="bSearch" placeholder="ابحث في الإنترنت"></label>
+        <div class="quick" id="quick"></div>
+        <div class="note"><svg class="i" data-i="info"></svg>معاينة — في النظام الحقيقي يعمل متصفح Chromium بتسريع كرت الشاشة</div>
+      </div>
+    </section>
+
+    <!-- ================= STORE ================= -->
+    <section class="screen app" id="store"><div class="main" id="storeMain"></div></section>
+
+    <!-- ================= TIMER ================= -->
+    <section class="screen app" id="timer">
+      <div class="timer-wrap">
+        <div class="seg"><button class="on" data-tmode="down">مؤقت تنازلي</button><button data-tmode="up">ساعة إيقاف</button></div>
+        <div class="chips" id="tPresets" style="justify-content:center"></div>
+        <div class="ring" id="tRing">
+          <svg viewBox="0 0 200 200"><circle class="trk" cx="100" cy="100" r="90"/><circle class="prg" id="tPrg" cx="100" cy="100" r="90"/></svg>
+          <div class="face"><div class="t-digits" id="tDigits"></div><div class="t-label" id="tLabel"></div></div>
+        </div>
+        <div class="t-ctrl">
+          <button class="round" id="tMinus" title="ناقص دقيقة"><svg class="i" data-i="minus"></svg></button>
+          <button class="round" id="tReset" title="إعادة"><svg class="i" data-i="restart"></svg></button>
+          <button class="round big" id="tGo" title="تشغيل"></button>
+          <button class="round" id="tBig" title="عرض كبير"><svg class="i" data-i="fit"></svg></button>
+          <button class="round" id="tPlus" title="زائد دقيقة"><svg class="i" data-i="plus"></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ATTENDANCE ================= -->
+    <section class="screen app" id="attend">
+      <div class="app-body"><aside class="side" id="atSide"></aside><div class="main" id="atMain"></div></div>
+      <input type="file" id="atFile" accept=".txt,.csv,text/plain,text/csv" hidden>
+    </section>
+
+    <!-- ================= GENERIC INSTALLED APP ================= -->
+    <section class="screen app" id="gen"><div class="gen" id="genBody"></div></section>
+
+    <!-- ================= SETTINGS ================= -->
+    <section class="screen app" id="settings">
+      <div class="app-body">
+        <aside class="side" id="setNav">
+          <button class="nav-btn on" data-sec="look"><svg class="i" data-i="palette"></svg><span class="txt">الواجهة والألوان</span></button>
+          <button class="nav-btn" data-sec="gallery"><svg class="i" data-i="image"></svg><span class="txt">صور الواجهة</span></button>
+          <button class="nav-btn" data-sec="brand"><svg class="i" data-i="star"></svg><span class="txt">الهوية والشعار</span></button>
+          <button class="nav-btn" data-sec="display"><svg class="i" data-i="monitor"></svg><span class="txt">الشاشة والعرض</span></button>
+          <button class="nav-btn" data-sec="appsset"><svg class="i" data-i="apps"></svg><span class="txt">التطبيقات</span></button>
+          <button class="nav-btn" data-sec="conn"><svg class="i" data-i="wifi"></svg><span class="txt">الاتصالات</span></button>
+          <button class="nav-btn" data-sec="storage"><svg class="i" data-i="hdd"></svg><span class="txt">التخزين</span></button>
+          <button class="nav-btn" data-sec="boardset"><svg class="i" data-i="board"></svg><span class="txt">السبورة</span></button>
+          <button class="nav-btn" data-sec="sound"><svg class="i" data-i="vol"></svg><span class="txt">الصوت والسطوع</span></button>
+          <button class="nav-btn" data-sec="time"><svg class="i" data-i="globe"></svg><span class="txt">اللغة والوقت</span></button>
+          <button class="nav-btn" data-sec="access"><svg class="i" data-i="eyedrop"></svg><span class="txt">سهولة الاستخدام</span></button>
+          <button class="nav-btn" data-sec="security"><svg class="i" data-i="lock"></svg><span class="txt">الأمان والقفل</span></button>
+          <button class="nav-btn" data-sec="power"><svg class="i" data-i="power"></svg><span class="txt">التشغيل والطاقة</span></button>
+          <button class="nav-btn" data-sec="backup"><svg class="i" data-i="save"></svg><span class="txt">النسخ الاحتياطي والتحديث</span></button>
+          <button class="nav-btn" data-sec="about"><svg class="i" data-i="info"></svg><span class="txt">حول النظام</span></button>
+        </aside>
+        <div class="main" id="setMain">
+
+          <div class="sec" data-sec="look">
+            <h1 class="h1">الواجهة والألوان</h1><p class="sub">الوضع الليلي والصباحي، ألوان النظام، والخلفية.</p>
+            <div class="card"><h3><svg class="i" data-i="autoTheme"></svg>الوضع</h3>
+              <div class="seg" id="modeSeg">
+                <button data-mode="light"><svg class="i" data-i="sun"></svg>صباحي</button>
+                <button data-mode="dark"><svg class="i" data-i="moon"></svg>ليلي</button>
+                <button data-mode="auto"><svg class="i" data-i="autoTheme"></svg>تلقائي</button>
+              </div>
+              <p class="hint" style="margin-top:10px">التلقائي: صباحي من ٦ الصبح لـ ٦ المساء، وليلي بعدها.</p>
+            </div>
+            <div class="card"><h3><svg class="i" data-i="palette"></svg>ألوان الواجهة</h3>
+              <div class="theme-opts" id="themeOpts"></div>
+              <div class="row" style="margin-top:12px"><span class="lbl">لون التمييز<span class="hint">لون الأزرار والعناصر المحددة</span></span><div class="acc-dots" id="accDots"></div></div>
+            </div>
+            <div class="card"><h3><svg class="i" data-i="image"></svg>خلفية الشاشة الرئيسية</h3>
+              <div class="chips" id="wallChips"></div>
+              <div class="row" style="margin-top:10px"><span class="lbl">صورة خاصة</span><button class="btn" id="wallPick"><svg class="i" data-i="upload"></svg>اختيار صورة</button><input type="file" id="wallFile" accept="image/*" hidden></div>
+            </div>
+            <div class="card"><h3><svg class="i" data-i="timer"></svg>الساعة</h3>
+              <div class="row"><label>إظهار الساعة والتاريخ</label><label class="sw"><input type="checkbox" id="sClock"><span></span></label></div>
+              <div class="row"><label>نظام ٢٤ ساعة</label><label class="sw"><input type="checkbox" id="s24"><span></span></label></div>
+              <div class="row"><label>الأرقام العربية (١٢٣)<span class="hint">عند الإطفاء تظهر 123</span></label><label class="sw"><input type="checkbox" id="sAr"><span></span></label></div>
+            </div>
+          </div>
+
+          <div class="sec" data-sec="brand" hidden>
+            <h1 class="h1">الهوية والشعار</h1><p class="sub">غيّر اسم الصف والشعار ومكانهم على الشاشة.</p>
+            <div class="card">
+              <h3><svg class="i" data-i="monitor"></svg>معاينة الشاشة</h3>
+              <div class="pv-wrap">
+                <div style="flex:1 1 420px;max-width:720px">
+                  <div id="pv"><div class="wall navy" id="pvWall"></div>
+                    <div class="pv-desk" id="pvDesk"><div class="pv-clock" id="pvClock"></div>
+                      <img id="pvLogo" class="brand-item" alt="" draggable="false">
+                      <div id="pvText" class="brand-item b-text"><div class="b-school"></div><div class="b-class"></div><div class="b-bar"></div></div></div>
+                    <div class="pv-dock"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                  </div>
+                  <div class="hint" style="margin-top:8px">اسحب الشعار أو النص داخل المعاينة لتغيير مكانه.</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:10px;min-width:220px">
+                  <button class="btn primary" id="liveDrag"><svg class="i" data-i="move"></svg>تحريك على الشاشة مباشرة</button>
+                  <button class="btn ghost" id="brandReset"><svg class="i" data-i="restart"></svg>استعادة الوضع الافتراضي</button>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3><svg class="i" data-i="textT"></svg>النص</h3>
+              <div class="row"><label for="sSchool">اسم المدرسة</label><input class="field" id="sSchool" type="text"></div>
+              <div class="row"><label for="sClass">اسم الصف<span class="hint">اكتبه يدوياً أو اختاره من القوائم</span></label><input class="field" id="sClass" type="text"></div>
+              <div class="row"><span class="lbl">اختيار سريع</span><select class="field" id="sGrade"></select><select class="field" id="sSection"></select></div>
+              <div class="row"><label>إظهار اسم المدرسة</label><label class="sw"><input type="checkbox" id="sShowSchool"><span></span></label></div>
+              <div class="row"><label>إظهار النص على الشاشة</label><label class="sw"><input type="checkbox" id="sShowText"><span></span></label></div>
+              <div class="row"><span class="lbl">موقع النص<span class="hint">أو اختر «بجانب الشعار»</span></span><div class="pos-grid" id="textGrid"></div><button class="chip" id="besideLogo">بجانب الشعار</button></div>
+              <div class="row"><label for="sTextSize">حجم النص</label><input type="range" id="sTextSize" min="0.6" max="1.8" step="0.05"></div>
+            </div>
+            <div class="card">
+              <h3><svg class="i" data-i="image"></svg>الشعار</h3>
+              <div class="row"><img class="logo-thumb" id="logoThumb" alt="">
+                <div class="btns"><button class="btn primary" id="logoPick"><svg class="i" data-i="upload"></svg>تغيير الشعار</button><button class="btn ghost" id="logoOrig"><svg class="i" data-i="restart"></svg>الشعار الأصلي</button></div>
+                <input type="file" id="logoFile" accept="image/*" hidden></div>
+              <div class="row"><label>إظهار الشعار</label><label class="sw"><input type="checkbox" id="sShowLogo"><span></span></label></div>
+              <div class="row"><span class="lbl">موقع الشعار</span><div class="pos-grid" id="logoGrid"></div></div>
+              <div class="row"><label for="sLogoSize">حجم الشعار</label><input type="range" id="sLogoSize" min="0.5" max="2.2" step="0.05"></div>
+              <div class="row"><label>شريط الشعار واسم الصف أعلى السبورة</label><label class="sw"><input type="checkbox" id="sStrip"><span></span></label></div>
+            </div>
+          </div>
+
+          <div class="sec" data-sec="conn" hidden>
+            <h1 class="h1">الاتصالات</h1><p class="sub">الشبكة اللاسلكية والبلوتوث واستلام الملفات.</p>
+            <div class="card"><h3><svg class="i" data-i="wifi"></svg>Wi-Fi<label class="sw end"><input type="checkbox" id="sWifi"><span></span></label></h3><div id="wifiList"></div></div>
+            <div class="card"><h3><svg class="i" data-i="bluetooth"></svg>البلوتوث<label class="sw end"><input type="checkbox" id="sBt"><span></span></label></h3>
+              <div id="btBody"></div>
+            </div>
+          </div>
+
+          <div class="sec" data-sec="storage" hidden>
+            <h1 class="h1">التخزين</h1><p class="sub">المساحة المستخدمة والمتوفرة وتفاصيل كل وحدة تخزين.</p>
+            <div id="storBody"></div>
+          </div>
+
+          <div class="sec" data-sec="boardset" hidden>
+            <h1 class="h1">السبورة</h1><p class="sub">الإعدادات الافتراضية للسبورة.</p>
+            <div class="card">
+              <div class="row"><label for="sSmooth">نعومة الخط<span class="hint">أعلى = خط أنعم وأقل اهتزاز</span></label><input type="range" id="sSmooth" min="0" max="0.8" step="0.05"></div>
+              <div class="row"><label>تجاهل راحة اليد<span class="hint">يمنع الخطوط العشوائية لما تتكئ على الشاشة</span></label><label class="sw"><input type="checkbox" id="sPalm"><span></span></label></div>
+              <div class="row"><label>الكتابة بالقلم الرقمي فقط<span class="hint">اللمس بالإصبع ما يرسم (للشاشات اللي بيها قلم)</span></label><label class="sw"><input type="checkbox" id="sPenOnly"><span></span></label></div>
+              <div class="row"><label>مساعد الخط المستقيم مفعّل دائماً</label><label class="sw"><input type="checkbox" id="sAssistDef"><span></span></label></div>
+              <div class="row"><label>الحفظ التلقائي للسبورة<span class="hint">ترجع كتابتك حتى لو انطفأ الجهاز</span></label><label class="sw"><input type="checkbox" id="sAuto"><span></span></label></div>
+              <div class="row"><span class="lbl">صفحات السبورة الحالية</span><button class="btn danger" id="clearBoards"><svg class="i" data-i="trash"></svg>حذف كل الصفحات</button></div>
+            </div>
+          </div>
+
+          <div class="sec" data-sec="sound" hidden>
+            <h1 class="h1">الصوت والشاشة</h1><p class="sub">مستوى الصوت والسطوع وقفل الشاشة.</p>
+            <div class="card">
+              <div class="row"><label for="sVol">الصوت</label><input type="range" id="sVol" min="0" max="100"></div>
+              <div class="row"><label for="sBright">السطوع</label><input type="range" id="sBright" min="10" max="100"></div>
+              <div class="row"><label for="sSleep">قفل الشاشة بعد عدم الاستخدام</label>
+                <select class="field" id="sSleep"><option value="5">٥ دقائق</option><option value="10">١٠ دقائق</option><option value="30">٣٠ دقيقة</option><option value="0">أبداً</option></select></div>
+            </div>
+            <div class="card"><h3><svg class="i" data-i="speaker"></svg>جهاز إخراج الصوت</h3>
+              <p class="hint" style="margin-top:0">اختار منين يطلع الصوت: الشاشة (HDMI)، سماعة USB، أو سماعة بلوتوث.</p>
+              <div id="audioOut"></div>
+            </div>
+          </div>
+
+          <div class="sec" data-sec="gallery" hidden></div>
+          <div class="sec" data-sec="appsset" hidden></div>
+          <div class="sec" data-sec="display" hidden></div>
+          <div class="sec" data-sec="time" hidden></div>
+          <div class="sec" data-sec="access" hidden></div>
+          <div class="sec" data-sec="security" hidden></div>
+          <div class="sec" data-sec="power" hidden></div>
+          <div class="sec" data-sec="backup" hidden></div>
+          <div class="sec" data-sec="about" hidden>
+            <h1 class="h1">حول النظام</h1><p class="sub">معلومات الجهاز والنظام.</p>
+            <div class="card" id="aboutCard"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast"><svg class="i" data-i="check"></svg><span></span></div>
+<div id="modalHost"></div>
+<div id="qp" hidden></div>
+<div id="btReq" hidden></div>
+
+<div id="lock" hidden>
+  <div class="wall navy" id="lockWall"></div>
+  <img alt="" id="lockLogo">
+  <div class="l-time" id="lockTime"></div>
+  <div class="l-school" id="lockSchool"></div>
+  <div class="l-class" id="lockClass"></div>
+  <div class="l-hint"><svg class="i" data-i="lock"></svg>المس الشاشة للفتح</div>
+</div>
+<div id="sysMsg" hidden><img alt="" id="sysLogo"><div class="wm">Alharthia <b>OS</b></div><div class="spin"></div><div id="sysTxt"></div></div>
+<div id="showOv" hidden></div>

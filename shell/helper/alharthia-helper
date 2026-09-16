@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""Alharthia OS root helper — the only thing the UI may run as root (via sudo).
+Every action is validated against an allow-list."""
+import json, os, re, subprocess, sys
+
+CATALOG = json.load(open("/opt/alharthia/catalog.json", encoding="utf-8"))
+ENV = dict(os.environ, DEBIAN_FRONTEND="noninteractive", LANG="C.UTF-8")
+
+
+def die(msg, code=2):
+    print(msg, flush=True)
+    sys.exit(code)
+
+
+def run(cmd):
+    p = subprocess.Popen(cmd, env=ENV, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+    for line in p.stdout:
+        print(line.rstrip(), flush=True)
+    return p.wait()
+
+
+def apt(action, app_id):
+    spec = CATALOG["store"].get(app_id)
+    if not spec or "apt" not in spec:
+        die("unknown app")
+    pkgs = spec["apt"]
+    opts = ["-y", "-o", "APT::Status-Fd=1", "-o", "Dpkg::Use-Pty=0"]
+    if action == "install":
+        run(["apt-get", "update"])
+        code = run(["apt-get", "install", "--no-install-recommends", *opts, *pkgs])
+        if code != 0 and spec.get("apt_alt"):
+            code = run(["apt-get", "install", "--no-install-recommends", *opts, *spec["apt_alt"]])
+    else:
+        code = run(["apt-get", "remove", *opts, *pkgs])
+        if code == 0:
+            run(["apt-get", "autoremove", "-y"])
+    sys.exit(code)
+
+
+def flatpak(action, ref):
+    allowed = {v.get("flatpak") for v in CATALOG["store"].values() if v.get("flatpak")}
+    if ref not in allowed:
+        die("unknown flatpak")
+    if action == "flatpak-install":
+        if run(["which", "flatpak"]) != 0:
+            run(["apt-get", "install", "-y", "flatpak"])
+        run(["flatpak", "remote-add", "--if-not-exists", "flathub", "https://dl.flathub.org/repo/flathub.flatpakrepo"])
+        sys.exit(run(["flatpak", "install", "-y", "--noninteractive", "flathub", ref]))
+    sys.exit(run(["flatpak", "uninstall", "-y", "--noninteractive", ref]))
+
+
+def is_usb_partition(dev):
+    if not re.fullmatch(r"/dev/sd[a-z]\d*", dev):
+        return False
+    disk = re.sub(r"\d+$", "", dev)
+    out = subprocess.run(["lsblk", "-dn", "-o", "TRAN,RM", disk], capture_output=True, text=True).stdout.split()
+    return bool(out) and (out[0] == "usb" or (len(out) > 1 and out[1] == "1"))
+
+
+def fmt(dev, fs, label):
+    if not is_usb_partition(dev):
+        die("refusing: not a USB device")
+    root_src = subprocess.run(["findmnt", "-n", "-o", "SOURCE", "/"], capture_output=True, text=True).stdout.strip()
+    if root_src.startswith(re.sub(r"\d+$", "", dev)):
+        die("refusing: system disk")
+    label = re.sub(r"[^A-Za-z0-9_ -]", "", label)[:11] or "USB"
+    print("progress 10", flush=True)
+    subprocess.run(["umount", "-q", dev])
+    cmds = {"exfat": ["mkfs.exfat", "-L", label, dev], "vfat": ["mkfs.vfat", "-F", "32", "-n", label.upper(), dev],
+            "ntfs": ["mkfs.ntfs", "-Q", "-L", label, dev], "ext4": ["mkfs.ext4", "-F", "-L", label, dev]}
+    if fs not in cmds:
+        die("bad fs")
+    print("progress 40", flush=True)
+    code = run(cmds[fs])
+    if code == 0 and fs == "ext4":
+        user = os.environ.get("SUDO_USER", "")
+        if user:
+            subprocess.run(["mkdir", "-p", "/tmp/alh-mnt"])
+            subprocess.run(["mount", dev, "/tmp/alh-mnt"])
+            subprocess.run(["chown", f"{user}:{user}", "/tmp/alh-mnt"])
+            subprocess.run(["umount", "/tmp/alh-mnt"])
+    print("progress 100", flush=True)
+    sys.exit(code)
+
+
+def tz(zone):
+    if not re.fullmatch(r"[A-Za-z_]+(/[A-Za-z_]+)?", zone) or not os.path.exists(f"/usr/share/zoneinfo/{zone}"):
+        die("bad timezone")
+    sys.exit(run(["timedatectl", "set-timezone", zone]))
+
+
+def main():
+    if len(sys.argv) < 3:
+        die("usage: alharthia-helper <action> <args>")
+    action, args = sys.argv[1], sys.argv[2:]
+    if action in ("install", "remove"):
+        apt(action, args[0])
+    elif action in ("flatpak-install", "flatpak-remove"):
+        flatpak(action, args[0])
+    elif action == "format" and len(args) == 3:
+        fmt(*args)
+    elif action == "timezone":
+        tz(args[0])
+    else:
+        die("unknown action")
+
+
+if __name__ == "__main__":
+    main()

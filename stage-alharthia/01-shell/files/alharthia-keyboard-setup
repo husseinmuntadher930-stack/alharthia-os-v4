@@ -1,0 +1,20 @@
+#!/bin/sh
+# Alharthia OS: keyboard languages for system programs (hardware keyboard: Alt+Shift switches).
+# The list is saved by the interface in ~/.config/alharthia/keyboard-langs (e.g. "ar en fr").
+CONF="$HOME/.config/alharthia/keyboard-langs"
+LANGS="ar en fr"
+[ -f "$CONF" ] && LANGS="$(cat "$CONF")"
+SRC=""
+for l in $LANGS; do
+	case "$l" in
+		ar) x=ara ;;
+		en) x=us ;;
+		fr) x=fr ;;
+		*) continue ;;
+	esac
+	SRC="${SRC:+$SRC, }('xkb', '$x')"
+done
+[ -n "$SRC" ] || SRC="('xkb', 'ara'), ('xkb', 'us')"
+command -v gsettings >/dev/null || exit 0
+gsettings set org.gnome.desktop.input-sources sources "[$SRC]" 2>/dev/null
+exit 0

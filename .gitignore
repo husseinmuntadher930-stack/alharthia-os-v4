@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+stage-alharthia/01-shell/files/app/
+deploy/

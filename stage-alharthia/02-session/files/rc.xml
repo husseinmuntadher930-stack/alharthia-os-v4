@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<labwc_config>
+  <core>
+    <decoration>server</decoration>
+    <gap>0</gap>
+  </core>
+  <theme>
+    <cornerRadius>10</cornerRadius>
+    <font place="ActiveWindow"><name>Noto Sans Arabic UI</name><size>13</size><weight>bold</weight></font>
+  </theme>
+  <windowRules>
+    <!-- the interface itself: no title bar -->
+    <windowRule identifier="alharthia-shell" serverDecoration="no" skipTaskbar="yes" skipWindowSwitcher="yes"/>
+    <!-- every other program opens maximized with a title bar; its X button returns to the interface -->
+    <windowRule identifier="*"><action name="Maximize"/></windowRule>
+  </windowRules>
+  <keyboard>
+    <default/>
+    <keybind key="W-Escape"><action name="Close"/></keybind>
+    <keybind key="C-A-t"><action name="Execute" command="foot"/></keybind>
+  </keyboard>
+</labwc_config>

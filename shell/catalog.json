@@ -1,0 +1,285 @@
+{
+ "builtin": {
+  "chromium": {
+   "bin": [
+    "chromium",
+    "chromium-browser"
+   ],
+   "args": [
+    "--touch-events=enabled",
+    "--password-store=basic",
+    "--ozone-platform=wayland",
+    "--enable-wayland-ime",
+    "--wayland-text-input-version=3",
+    "--force-renderer-accessibility"
+   ]
+  },
+  "word": {
+   "bin": [
+    "libreoffice"
+   ],
+   "args": [
+    "--writer"
+   ]
+  },
+  "excel": {
+   "bin": [
+    "libreoffice"
+   ],
+   "args": [
+    "--calc"
+   ]
+  },
+  "ppt": {
+   "bin": [
+    "libreoffice"
+   ],
+   "args": [
+    "--impress"
+   ]
+  },
+  "office": {
+   "bin": [
+    "libreoffice"
+   ],
+   "args": []
+  },
+  "terminal": {
+   "bin": [
+    "foot",
+    "lxterminal",
+    "xterm"
+   ],
+   "args": []
+  },
+  "open": {
+   "bin": [
+    "xdg-open"
+   ],
+   "args": []
+  },
+  "media": {
+   "bin": [
+    "mpv"
+   ],
+   "args": [
+    "--fs",
+    "--force-window=immediate",
+    "--keep-open=yes",
+    "--osd-level=1",
+    "--script-opts=osc-visibility=always"
+   ]
+  }
+ },
+ "store": {
+  "gcompris": {
+   "bin": [
+    "gcompris-qt"
+   ],
+   "args": [],
+   "apt": [
+    "gcompris-qt"
+   ]
+  },
+  "scratch": {
+   "bin": [
+    "scratch3"
+   ],
+   "args": [],
+   "apt": [
+    "scratch3"
+   ]
+  },
+  "thonny": {
+   "bin": [
+    "thonny"
+   ],
+   "args": [],
+   "apt": [
+    "thonny"
+   ]
+  },
+  "stellarium": {
+   "bin": [
+    "stellarium"
+   ],
+   "args": [],
+   "apt": [
+    "stellarium"
+   ]
+  },
+  "kalzium": {
+   "bin": [
+    "kalzium"
+   ],
+   "args": [],
+   "apt": [
+    "kalzium"
+   ]
+  },
+  "step": {
+   "bin": [
+    "step"
+   ],
+   "args": [],
+   "apt": [
+    "step"
+   ]
+  },
+  "geogebra": {
+   "web": "https://www.geogebra.org/classic"
+  },
+  "kalgebra": {
+   "bin": [
+    "kalgebra"
+   ],
+   "args": [],
+   "apt": [
+    "kalgebra"
+   ]
+  },
+  "labplot": {
+   "bin": [
+    "labplot2",
+    "labplot"
+   ],
+   "args": [],
+   "apt": [
+    "labplot"
+   ]
+  },
+  "onlyoffice": {
+   "bin": [
+    "flatpak"
+   ],
+   "args": [
+    "run",
+    "org.onlyoffice.desktopeditors"
+   ],
+   "flatpak": "org.onlyoffice.desktopeditors"
+  },
+  "kiwix": {
+   "bin": [
+    "kiwix-desktop"
+   ],
+   "args": [],
+   "apt": [
+    "kiwix"
+   ]
+  },
+  "anki": {
+   "bin": [
+    "anki"
+   ],
+   "args": [],
+   "apt": [
+    "anki"
+   ]
+  },
+  "gimp": {
+   "bin": [
+    "gimp"
+   ],
+   "args": [],
+   "apt": [
+    "gimp"
+   ]
+  },
+  "inkscape": {
+   "bin": [
+    "inkscape"
+   ],
+   "args": [],
+   "apt": [
+    "inkscape"
+   ]
+  },
+  "krita": {
+   "bin": [
+    "krita"
+   ],
+   "args": [],
+   "apt": [
+    "krita"
+   ]
+  },
+  "tuxpaint": {
+   "bin": [
+    "tuxpaint"
+   ],
+   "args": [],
+   "apt": [
+    "tuxpaint"
+   ]
+  },
+  "vlc": {
+   "bin": [
+    "vlc"
+   ],
+   "args": [],
+   "apt": [
+    "vlc"
+   ]
+  },
+  "audacity": {
+   "bin": [
+    "audacity"
+   ],
+   "args": [],
+   "apt": [
+    "audacity"
+   ]
+  },
+  "obs": {
+   "bin": [
+    "obs"
+   ],
+   "args": [],
+   "apt": [
+    "obs-studio"
+   ]
+  },
+  "luanti": {
+   "bin": [
+    "luanti",
+    "minetest"
+   ],
+   "args": [],
+   "apt": [
+    "luanti"
+   ],
+   "apt_alt": [
+    "minetest"
+   ]
+  },
+  "qalc": {
+   "bin": [
+    "qalculate-gtk"
+   ],
+   "args": [],
+   "apt": [
+    "qalculate-gtk"
+   ]
+  },
+  "flameshot": {
+   "bin": [
+    "flameshot"
+   ],
+   "args": [
+    "gui"
+   ],
+   "apt": [
+    "flameshot"
+   ]
+  },
+  "kdeconnect": {
+   "bin": [
+    "kdeconnect-app"
+   ],
+   "args": [],
+   "apt": [
+    "kdeconnect"
+   ]
+  }
+ }
+}

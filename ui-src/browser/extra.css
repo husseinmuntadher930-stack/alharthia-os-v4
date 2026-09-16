@@ -1,0 +1,36 @@
+
+/* ============ Alharthia browser pages ============ */
+html,body{background:var(--bg)}
+#br{display:flex;flex-direction:column;height:100%}
+#br #topbar{flex:none}
+#br .tb-start #tbTitle{font-weight:700;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40vw;padding:0 8px}
+#br .btabs{flex:none;overflow-x:auto;scrollbar-width:none;align-items:flex-end;min-height:44px}
+#br .btabs::-webkit-scrollbar{display:none}
+#br .btab{cursor:pointer;flex:0 1 240px;min-width:120px;background:transparent;color:var(--muted);padding:0 8px 0 12px}
+#br .btab.on{background:var(--surface);color:var(--text)}
+#br .btab .bt-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#br .bt-x{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font-size:15px;color:var(--muted);flex:none}
+#br .bt-x:active{background:var(--surface-3)}
+#br .bt-new{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:20px;color:var(--muted);flex:none;margin-bottom:2px}
+#br .spin.mini{width:16px;height:16px;border-width:2px;flex:none}
+#br .bchrome{flex:none}
+#br .icon-btn:disabled{opacity:.35}
+#br .url{margin:0}
+#br #brLock{display:grid;place-items:center}
+#brProg{height:3px;flex:none;background:transparent;overflow:hidden}
+#brProg i{display:block;height:100%;width:0;background:var(--acc);transition:width .2s}
+#brProg:not(.on) i{width:0!important}
+#tbKbd.off{opacity:.45}
+#brPanel{flex:1;min-height:0;overflow-y:auto;background:var(--bg)}
+.brp-in{max-width:900px;margin:0 auto;padding:24px 20px calc(var(--osk-h,0px) + 24px);display:flex;flex-direction:column;align-items:center;gap:24px}
+html.expanded,html.expanded body{height:100%}
+.nt-recent{width:min(720px,100%);display:flex;flex-direction:column;gap:4px}
+.nt-recent h3{font-size:14px;color:var(--muted);margin:0 8px 6px;font-weight:600}
+.nt-recent a{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;color:var(--text);text-decoration:none;cursor:pointer;background:var(--surface)}
+.nt-recent a svg{color:var(--muted);font-size:18px;flex:none}
+.nt-recent a span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nt-recent a small{color:var(--muted);max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#nt{min-height:100%;padding-bottom:calc(var(--osk-h,0px) + 30px);overflow:visible}
+body:has(#nt){overflow:auto;height:auto;min-height:100%}
+.nt-logo{width:110px;height:110px;object-fit:cover}
+a.qk{color:var(--text);text-decoration:none}
