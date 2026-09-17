@@ -24,18 +24,35 @@ install -m 644 files/rc.xml "${H}/.config/labwc/rc.xml"
 install -m 755 files/autostart "${H}/.config/labwc/autostart"
 install -m 644 files/environment "${H}/.config/labwc/environment"
 
-# Bluetooth: accept incoming files automatically and save them in ~/Received
-cat > "${H}/.config/systemd/user/obex.service.d/alharthia.conf" <<OBEX
+# Bluetooth: receive files automatically into ~/Received (system service with its own D-Bus session)
+cat > "${ROOTFS_DIR}/etc/systemd/system/alharthia-obex.service" <<UNIT
+[Unit]
+Description=Alharthia OS — receive files over Bluetooth
+After=bluetooth.service
+Requires=bluetooth.service
+
 [Service]
-ExecStart=
-ExecStart=/usr/libexec/bluetooth/obexd --auto-accept --root=/home/${U}/Received
-OBEX
+User=${U}
+ExecStart=/usr/bin/dbus-run-session -- /usr/libexec/bluetooth/obexd -n -a -r /home/${U}/Received
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=bluetooth.target multi-user.target
+UNIT
+if [ -f "${ROOTFS_DIR}/etc/bluetooth/main.conf" ]; then
+	sed -i '/^#\?Class *=/d' "${ROOTFS_DIR}/etc/bluetooth/main.conf"
+	sed -i '/^\[General\]/a Class = 0x10010C' "${ROOTFS_DIR}/etc/bluetooth/main.conf"
+fi
+install -d "${H}/.config/systemd/user"
+ln -sf /dev/null "${H}/.config/systemd/user/obex.service"
 
 on_chroot << CHROOT
 chown -R ${U}:${U} /home/${U}
 systemctl set-default multi-user.target
 systemctl enable NetworkManager || true
 systemctl enable bluetooth || true
+systemctl enable alharthia-obex || true
 for g in bluetooth video render input plugdev netdev audio; do getent group \$g >/dev/null && usermod -aG \$g ${U}; done
 true
 CHROOT

@@ -25,6 +25,7 @@ install -m 644 -o "$U" -g "$U" "$ROOT/stage-alharthia/02-session/files/rc.xml" "
 install -m 755 -o "$U" -g "$U" "$ROOT/stage-alharthia/02-session/files/autostart" "$H/.config/labwc/autostart"
 install -m 644 -o "$U" -g "$U" "$ROOT/stage-alharthia/02-session/files/environment" "$H/.config/labwc/environment"
 
+bash "$ROOT/tools/fix-bluetooth.sh" || true
 pkill -f squeekboard || true
 pkill -f alharthia_server.py || true
 pkill -f alharthia_host.py || true
