@@ -5,7 +5,7 @@ apt-get update
 
 # must-have packages (the build stops if one of these is missing)
 apt-get install -y --no-install-recommends \
-	labwc python3 network-manager bluez bluez-obexd udisks2 \
+	labwc python3 network-manager bluez bluez-obexd dbus-user-session udisks2 \
 	exfatprogs dosfstools plymouth plymouth-themes \
 	fonts-noto-core fonts-noto-color-emoji pipewire wireplumber pipewire-pulse \
 	libgl1-mesa-dri libegl1 libgles2 xdg-utils sudo rfkill foot wtype mpv pulseaudio-utils \

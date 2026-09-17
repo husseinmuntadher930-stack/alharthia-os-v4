@@ -14,7 +14,7 @@ import json, os, re, secrets, shutil, socket, subprocess, sys, threading, time, 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, quote
 
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 HOST, PORT = "127.0.0.1", int(os.environ.get("ALH_PORT", "8765"))
 BASE = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE, "ui")
@@ -1097,8 +1097,74 @@ class Handler(BaseHTTPRequestHandler):
         return {"ok": True}
 
 
+# ---------------------------------------------------------------- bluetooth: trust every paired device
+BT_TRUSTED = set()
+
+
+def bt_trust(mac):
+    if mac in BT_TRUSTED:
+        return
+    _, info, _ = btctl("info", mac, timeout=4)
+    if "Paired: yes" in info or "Bonded: yes" in info:
+        if "Trusted: yes" not in info:
+            btctl("trust", mac, timeout=4)
+        BT_TRUSTED.add(mac)
+
+
+def bt_sweep():
+    _, out, _ = btctl("devices", "Paired", timeout=4)
+    if "Invalid" in out or not out.strip():
+        _, out2, _ = btctl("paired-devices", timeout=4)
+        out = out + "\n" + out2
+    for mac in set(re.findall(r"Device ([0-9A-F:]{17})", out)):
+        bt_trust(mac)
+
+
+def bt_watch():
+    """Trusts any phone the moment it pairs or connects, so it can send files straight away."""
+    import pty, select
+    while True:
+        if not has("bluetoothctl"):
+            return
+        try:
+            bt_sweep()
+        except Exception:  # noqa
+            pass
+        try:
+            master, slave = pty.openpty()
+            p = subprocess.Popen(["bluetoothctl"], stdin=slave, stdout=slave, stderr=slave, close_fds=True,
+                                 start_new_session=True)
+            os.close(slave)
+            buf, last = b"", time.time()
+            while p.poll() is None:
+                r, _, _ = select.select([master], [], [], 5)
+                if r:
+                    try:
+                        chunk = os.read(master, 4096)
+                    except OSError:
+                        break
+                    buf = (buf + chunk)[-8192:]
+                    text = buf.decode("utf-8", "ignore")
+                    for mac in set(re.findall(r"Device ([0-9A-F:]{17}) (?:Paired|Bonded|Connected|ServicesResolved): yes", text)):
+                        BT_TRUSTED.discard(mac)
+                        bt_trust(mac)
+                    if "\n" in text:
+                        buf = buf[buf.rfind(b"\n") + 1:]
+                if time.time() - last > 20:
+                    last = time.time()
+                    bt_sweep()
+            try:
+                os.close(master)
+            except OSError:
+                pass
+        except Exception:  # noqa
+            pass
+        time.sleep(5)
+
+
 def main():
     ensure_folders()
+    threading.Thread(target=bt_watch, daemon=True).start()
     srv = ThreadingHTTPServer((HOST, PORT), Handler)
     srv.daemon_threads = True
     print(f"Alharthia service on http://{HOST}:{PORT}/", flush=True)

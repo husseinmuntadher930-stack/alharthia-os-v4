@@ -8,7 +8,7 @@ H="$(getent passwd "$U" | cut -d: -f6)"
 
 echo "» تنزيل البرامج الجديدة (الكيبورد، مشغل الوسائط، أجهزة الصوت)…"
 apt-get update || true
-for p in wtype mpv pulseaudio-utils python3-gi gir1.2-gtk-3.0 gir1.2-gtklayershell-0.1 \
+for p in dbus-user-session wtype mpv pulseaudio-utils python3-gi gir1.2-gtk-3.0 gir1.2-gtklayershell-0.1 \
 	gir1.2-webkit2-4.1 gir1.2-atspi-2.0 at-spi2-core lswt wlrctl fonts-noto-color-emoji; do
 	apt-get install -y --no-install-recommends "$p" || echo "تحذير: ما نزل $p"
 done

@@ -1,6 +1,7 @@
 # Alharthia OS session
 /usr/bin/alharthia-keyboard-setup
-systemctl --user start obex.service >/dev/null 2>&1 &
+# Bluetooth file receiving (obexd): the user service, and a direct start if the service is not available
+(systemctl --user start obex.service; sleep 6; pgrep -x obexd >/dev/null || exec /usr/libexec/bluetooth/obexd -n -a -r "$HOME/Received") >/dev/null 2>&1 &
 command -v bt-agent >/dev/null && bt-agent -c NoInputNoOutput >/dev/null 2>&1 &
 # the Alharthia keyboard (same as the interface) above every program
 (sleep 2; exec python3 /opt/alharthia/alharthia_osk.py) >/dev/null 2>&1 &
