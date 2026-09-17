@@ -14,7 +14,7 @@ import json, os, re, secrets, shutil, socket, subprocess, sys, threading, time, 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, quote
 
-VERSION = "1.4.1"
+VERSION = "1.4.3"
 HOST, PORT = "127.0.0.1", int(os.environ.get("ALH_PORT", "8765"))
 BASE = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE, "ui")
@@ -217,7 +217,7 @@ def bt_state():
                            "icon": (re.search(r"Icon:\s*(\S+)", info) or [None, ""])[1]})
     return {"available": bool(show.strip()), "powered": field("Powered") == "yes", "discoverable": field("Discoverable") == "yes",
             "name": field("Alias") or field("Name"), "paired": paired,
-            "receiving": has("/usr/libexec/bluetooth/obexd") or os.path.exists("/usr/libexec/bluetooth/obexd")}
+            "receiving": os.path.exists("/opt/alharthia/alharthia_btrecv.py") or os.path.exists("/usr/libexec/bluetooth/obexd")}
 
 
 BT_SCAN = {"proc": None, "until": 0}

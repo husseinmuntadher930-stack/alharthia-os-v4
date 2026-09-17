@@ -9,7 +9,7 @@ apt-get install -y --no-install-recommends \
 	exfatprogs dosfstools plymouth plymouth-themes \
 	fonts-noto-core fonts-noto-color-emoji pipewire wireplumber pipewire-pulse \
 	libgl1-mesa-dri libegl1 libgles2 xdg-utils sudo rfkill foot wtype mpv pulseaudio-utils \
-	python3-gi gir1.2-gtk-3.0 gir1.2-gtklayershell-0.1 \
+	python3-gi python3-dbus gir1.2-gtk-3.0 gir1.2-gtklayershell-0.1 \
 	chromium libreoffice-writer libreoffice-calc libreoffice-impress
 
 # nice-to-have packages: one by one, so a renamed package never breaks the build
