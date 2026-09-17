@@ -230,6 +230,12 @@ html[data-theme=dark] #osk,#osk.dk{--kb-bg:#1c1d21;--kb-key:#3a3b40;--kb-fn:#2a2
 #tbKbd.off{opacity:.45}
 .st-wifi .wf path{transition:opacity .2s}
 @media (max-width:760px){.osk-m,.osk-l{--kh:46px;--kg:5px}.ol{padding:0 8px}}
+/* ============ bluetooth transfer card ============ */
+#btReq.xfer .hd .grow{flex:1;min-width:0}
+#btReq .icon-btn.sm{width:36px;height:36px;font-size:16px}
+#btReq .ic.pulse{animation:btPulse 1.4s ease-in-out infinite}
+@keyframes btPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.45)}50%{box-shadow:0 0 0 9px rgba(37,99,235,0)}}
+#btReq .xf-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 /* ============ terminal ============ */
 #term{background:#0b1020}
 #term .term-tabs{background:#141a2e;padding:6px 10px 0;align-items:flex-end;gap:10px;justify-content:space-between}

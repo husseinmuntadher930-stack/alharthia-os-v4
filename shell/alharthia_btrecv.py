@@ -8,7 +8,7 @@ It does not depend on obexd, so it works the same on every BlueZ version.
 
 Run as root (system service):  ALH_USER=teacher python3 alharthia_btrecv.py
 """
-import os, pwd, re, socket, struct, sys, threading, time
+import itertools, json, os, pwd, re, socket, struct, sys, threading, time
 
 OPP_UUID = "00001105-0000-1000-8000-00805f9b34fb"
 PROFILE_PATH = "/org/alharthia/opp"
@@ -19,6 +19,34 @@ MAX_PKT = 0x7FFF
 OP_CONNECT, OP_DISCONNECT, OP_PUT, OP_PUT_FINAL, OP_ABORT = 0x80, 0x81, 0x02, 0x82, 0xFF
 RSP_CONTINUE, RSP_OK, RSP_BAD, RSP_FORBIDDEN, RSP_NOT_IMPL = 0x90, 0xA0, 0xC0, 0xC3, 0xD1
 H_NAME, H_TYPE, H_LENGTH, H_BODY, H_END_BODY = 0x01, 0x42, 0xC3, 0x48, 0x49
+
+
+STATUS_FILE = os.environ.get("ALH_BT_STATUS", "/run/alharthia/bt-transfers.json")
+TRANSFERS = {}
+T_LOCK = threading.Lock()
+T_IDS = itertools.count(1)
+T_LAST = [0.0]
+
+
+def status_write(force=False):
+    """Live transfer list for the interface (read by alharthia_server.py)."""
+    now = time.time()
+    if not force and now - T_LAST[0] < 0.3:
+        return
+    T_LAST[0] = now
+    with T_LOCK:
+        for k in [k for k, t in TRANSFERS.items() if t["state"] != "receiving" and now - t["t"] > 60]:
+            TRANSFERS.pop(k, None)
+        data = list(TRANSFERS.values())
+    try:
+        os.makedirs(os.path.dirname(STATUS_FILE), exist_ok=True)
+        tmp = STATUS_FILE + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump({"now": now, "items": data}, f, ensure_ascii=False)
+        os.chmod(tmp, 0o644)
+        os.replace(tmp, STATUS_FILE)
+    except OSError as e:
+        log("status write failed", e)
 
 
 def log(*a):
@@ -87,9 +115,11 @@ def unique_path(folder, name):
 class Session:
     """One OBEX Object Push connection."""
 
-    def __init__(self, sock, peer=""):
+    def __init__(self, sock, peer="", peer_name=""):
         self.sock = sock
         self.peer = peer
+        self.peer_name = peer_name or peer
+        self.tr = None
         self.seq = sock.type == socket.SOCK_SEQPACKET
         self.buf = b""
         self.file = None
@@ -129,7 +159,24 @@ class Session:
         self.tmp = os.path.join(folder, "." + self.name + ".part")
         self.file = open(self.tmp, "wb")
         self.got = 0
+        self.tr = {"id": next(T_IDS), "name": self.name, "from": self.peer_name, "size": self.size or 0,
+                   "got": 0, "state": "receiving", "started": time.time(), "t": time.time(), "path": ""}
+        with T_LOCK:
+            TRANSFERS[self.tr["id"]] = self.tr
+        status_write(True)
         log("receiving", self.name, "from", self.peer, "size", self.size)
+
+    def progress(self):
+        if self.tr:
+            self.tr["got"] = self.got
+            self.tr["t"] = time.time()
+            status_write()
+
+    def end_transfer(self, state, path=""):
+        if self.tr:
+            self.tr.update(state=state, got=self.got, path=path, t=time.time())
+            self.tr = None
+            status_write(True)
 
     def finish_file(self):
         if not self.file:
@@ -145,11 +192,13 @@ class Session:
         except OSError:
             pass
         log("saved", final, self.got, "bytes")
+        self.end_transfer("done", final)
         self.file = self.tmp = None
         self.name = self.size = None
 
     def drop_file(self):
         if self.file:
+            self.end_transfer("failed")
             try:
                 self.file.close()
                 os.remove(self.tmp)
@@ -207,6 +256,7 @@ class Session:
         for b in body:
             self.file.write(b)
             self.got += len(b)
+        self.progress()
         if op == OP_PUT_FINAL:
             self.finish_file()
             self.send(RSP_OK)
@@ -214,8 +264,8 @@ class Session:
             self.send(RSP_CONTINUE)
 
 
-def serve(sock, peer=""):
-    threading.Thread(target=Session(sock, peer).run, daemon=True).start()
+def serve(sock, peer="", peer_name=""):
+    threading.Thread(target=Session(sock, peer, peer_name).run, daemon=True).start()
 
 
 def main():
@@ -243,8 +293,14 @@ def main():
                 return
             sock.setblocking(True)
             peer = str(device).rsplit("/", 1)[-1].replace("dev_", "").replace("_", ":")
-            log("new connection from", peer)
-            serve(sock, peer)
+            name = ""
+            try:
+                props_if = dbus.Interface(bus.get_object("org.bluez", device), "org.freedesktop.DBus.Properties")
+                name = str(props_if.Get("org.bluez.Device1", "Alias"))
+            except Exception:  # noqa
+                pass
+            log("new connection from", peer, name)
+            serve(sock, peer, name)
 
         @dbus.service.method("org.bluez.Profile1", in_signature="o", out_signature="")
         def RequestDisconnection(self, device):
@@ -278,6 +334,7 @@ def main():
 
     bus.watch_name_owner("org.bluez", owner_changed)
     dest_dir()
+    status_write(True)
     GLib.MainLoop().run()
 
 

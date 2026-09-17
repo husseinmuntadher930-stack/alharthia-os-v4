@@ -14,7 +14,7 @@ import json, os, re, secrets, shutil, socket, subprocess, sys, threading, time, 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, quote
 
-VERSION = "1.4.3"
+VERSION = "1.4.4"
 HOST, PORT = "127.0.0.1", int(os.environ.get("ALH_PORT", "8765"))
 BASE = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE, "ui")
@@ -273,6 +273,8 @@ def received_since(ts):
     folder = os.path.join(HOME, FOLDERS["bt"])
     items = []
     for name in os.listdir(folder):
+        if name.startswith("."):
+            continue
         p = os.path.join(folder, name)
         try:
             st = os.stat(p)
@@ -938,6 +940,20 @@ class Handler(BaseHTTPRequestHandler):
     def api_bt_name(self, m, q):
         btctl("system-alias", self.jbody()["name"][:40])
         return {"ok": True}
+
+    def api_bt_transfers(self, m, q):
+        try:
+            with open("/run/alharthia/bt-transfers.json", encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            return {"items": []}
+        home = os.path.join(HOME, "")
+        items = []
+        for t in data.get("items", []):
+            if t.get("path") and not str(t["path"]).startswith(home):
+                t["path"] = ""
+            items.append(t)
+        return {"items": items, "now": data.get("now")}
 
     def api_bt_scan(self, m, q):
         if m == "POST":

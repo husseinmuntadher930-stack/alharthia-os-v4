@@ -38,6 +38,7 @@ const Native={
     setInterval(()=>{ if(current==='settings') this.pollBt(); },6000);
     setInterval(()=>this.pollBt(),45000);
     setInterval(()=>this.pollReceived(),4000);
+    setInterval(()=>BtXfer.poll(),800);
     this.pushKbd();
     { const baseSave=save; let kt=0; save=function(m){ baseSave(m); clearTimeout(kt); kt=setTimeout(()=>Native.pushKbd(),600); }; }
     API.get('/api/volume').then(v=>{ if(v.value!=null){ S.vol=v.value; syncSettingsUI(); } }).catch(()=>{});
@@ -134,6 +135,7 @@ const Native={
     $('#btBody').addEventListener('change',e=>self.onBtChange(e));
     BT.incoming=()=>toast(`من الهاتف: شارك الملف بالبلوتوث واختر «${S.btName}»`);
     BT.showNative=node=>{
+      if(BtXfer.shown.has(node.path)) return;
       const el=$('#btReq'); el.hidden=false; beep(2,990);
       el.innerHTML=`<div class="hd"><span class="ic" style="background:var(--ok)">${icon('bluetooth')}</span><div><b>تم استلام ملف بالبلوتوث</b><div class="hint">محفوظ في «المستلمة عبر البلوتوث»</div></div></div><div class="fn">${esc(node.name)}</div>
         <div class="btns" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" data-nbr="folder">${icon('folder')}فتح المجلد</button><button class="btn primary" data-nbr="open">فتح الملف</button></div>`;
@@ -242,6 +244,45 @@ const Native={
   }
 };
 window.Native=Native;
+
+/* ---------------- Bluetooth transfer card (bottom-left, like the phone) ---------------- */
+const BtXfer={
+  shown:new Set(), seen:new Map(), active:null, hideT:0, t0:Date.now()/1000,
+  async poll(){
+    if(!(window.Native&&Native.on)) return;
+    let r; try{ r=await API.get('/api/bt/transfers'); }catch(e){ return; }
+    const items=(r.items||[]).filter(t=>t.started>=this.t0-2);
+    const live=items.filter(t=>t.state==='receiving').sort((a,b)=>b.started-a.started);
+    if(live.length){ this.active=live[0].id; this.render(live[0],live.length-1); return; }
+    for(const t of items){
+      const prev=this.seen.get(t.id); if(prev===t.state) continue;
+      this.seen.set(t.id,t.state);
+      if(t.state==='done'){ if(t.path) this.shown.add(t.path); this.render(t,0); beep(2,990); }
+      else if(t.state==='failed'&&this.active===t.id) this.render(t,0);
+    }
+  },
+  render(t,more){
+    const el=$('#btReq'); el.hidden=false; el.classList.add('xfer');
+    const pct=t.size?Math.min(100,Math.round(t.got/t.size*100)):0;
+    const secs=Math.max(.5,(t.t||Date.now()/1000)-t.started), speed=t.got/secs;
+    const done=t.state==='done', fail=t.state==='failed';
+    const color=done?'var(--ok)':fail?'var(--danger)':'#2563eb';
+    el.innerHTML=`<div class="hd"><span class="ic${!done&&!fail?' pulse':''}" style="background:${color}">${icon(done?'check':fail?'x':'bluetooth')}</span>
+        <div class="grow"><b>${done?'تم استلام الملف':fail?'فشل استلام الملف':'جاري استلام ملف'}</b><div class="hint">${fail?'انقطع الاتصال مع الجهاز':'من: '+esc(t.from||'جهاز بلوتوث')}${more>0?` · و${nf(more)} ملف ثاني`:''}</div></div>
+        <button class="icon-btn sm" data-xf="hide" title="إخفاء">${icon('x')}</button></div>
+      <div class="fn">${esc(t.name)}</div>
+      ${done?`<div class="hint">${fmtSize(t.got)} · محفوظ في «المستلمة عبر البلوتوث»</div>
+        <div class="btns" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" data-xf="folder">${icon('folder')}فتح المجلد</button><button class="btn primary" data-xf="open">فتح الملف</button></div>`
+      :fail?'':`<div class="meter"><i style="width:${t.size?pct:30}%"></i></div>
+        <div class="xf-row"><span>${t.size?nf(pct)+'٪':''}</span><span>${fmtSize(t.got)}${t.size?' من '+fmtSize(t.size):''}</span><span>${fmtSize(speed)}/ث</span></div>`}`;
+    el.onclick=e=>{ const b=e.target.closest('[data-xf]'); if(!b) return; const a=b.dataset.xf; el.hidden=true;
+      if(a==='folder'){ go('files'); Files.open('internal','bt'); }
+      if(a==='open'&&t.path) openFile(nodeOf({path:t.path,name:t.path.split('/').pop(),size:t.got,mtime:Date.now()})); };
+    clearTimeout(this.hideT);
+    if(done||fail) this.hideT=setTimeout(()=>{ el.hidden=true; el.classList.remove('xfer'); },done?15000:8000);
+  }
+};
+window.BtXfer=BtXfer;
 function nodeOf(f){ return {native:true,id:f.path,path:f.path,name:f.name,type:f.dir?'dir':extOf(f.name),size:f.size,mtime:f.mtime,count:f.count}; }
 async function nativeOpen(node){
   const t=node.type;
