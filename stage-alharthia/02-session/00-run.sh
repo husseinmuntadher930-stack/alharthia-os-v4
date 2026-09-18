@@ -40,6 +40,26 @@ RestartSec=3
 [Install]
 WantedBy=multi-user.target
 UNIT
+# AirPlay receiver: lets iPhone / iPad mirror their screen onto this device (started on demand)
+cat > "${ROOTFS_DIR}/etc/systemd/system/alharthia-airplay.service" <<UNIT
+[Unit]
+Description=Alharthia OS — AirPlay screen receiver (iPhone / iPad)
+After=avahi-daemon.service network-online.target
+Wants=avahi-daemon.service
+
+[Service]
+User=${U}
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=GST_GL_API=gles2
+ExecStart=/usr/bin/uxplay -n Alharthia -nh -fs -vs waylandsink
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
+UNIT
+
 if [ -f "${ROOTFS_DIR}/etc/bluetooth/main.conf" ]; then
 	sed -i '/^#\?Class *=/d' "${ROOTFS_DIR}/etc/bluetooth/main.conf"
 	sed -i '/^\[General\]/a Class = 0x10010C' "${ROOTFS_DIR}/etc/bluetooth/main.conf"
@@ -53,6 +73,8 @@ systemctl set-default multi-user.target
 systemctl enable NetworkManager || true
 systemctl enable bluetooth || true
 systemctl enable alharthia-btrecv || true
+systemctl enable avahi-daemon || true
+systemctl disable alharthia-airplay || true
 for g in bluetooth video render input plugdev netdev audio; do getent group \$g >/dev/null && usermod -aG \$g ${U}; done
 true
 CHROOT

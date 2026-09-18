@@ -252,9 +252,13 @@ html[data-theme=dark] .chip.on{color:#fff}
 #lock .l-class{font-size:min(6vh,56px);font-weight:700}
 #lock .l-hint{position:absolute;bottom:5vh;opacity:.7;display:flex;gap:8px;align-items:center;font-size:17px;animation:pulse 2s infinite}
 @keyframes pulse{50%{opacity:.35}}
-#sysMsg{position:fixed;inset:0;z-index:130;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
+#sysMsg{position:fixed;inset:0;z-index:200;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
 #sysMsg img{width:130px;border-radius:50%}
 #sysMsg .wm{font-size:28px;font-weight:700;direction:ltr}#sysMsg .wm b{color:var(--acc)}
+#sysMsg #sysTxt{direction:ltr;letter-spacing:.3px;opacity:.85}
+#sysMsg.power #sysTxt{font-size:24px;opacity:1}
+#sysMsg.power img{width:150px}
+html.sysmsg #sideWrap,html.sysmsg #osk,html.sysmsg #toast,html.sysmsg #qp{display:none!important}
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(128,128,128,.25);border-top-color:var(--acc);animation:rot .8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 
@@ -601,6 +605,71 @@ html[data-theme=dark] #osk,#osk.dk{--kb-bg:#1c1d21;--kb-key:#3a3b40;--kb-fn:#2a2
 #tbKbd.off{opacity:.45}
 .st-wifi .wf path{transition:opacity .2s}
 @media (max-width:760px){.osk-m,.osk-l{--kh:46px;--kg:5px}.ol{padding:0 8px}}
+html.lang-en{--font:"IBM Plex Sans Arabic","Segoe UI",system-ui,sans-serif}
+/* ============ wireless sharing ============ */
+.cast-live{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok);font-weight:600}
+.cast-url{margin-top:14px;padding:16px;border-radius:16px;background:var(--surface-2);text-align:center}
+.cast-url b{display:block;font-size:clamp(18px,3vw,28px);margin-top:6px;word-break:break-all;color:var(--head);user-select:text}
+.cast-steps{margin:6px 0 0;padding-inline-start:22px;color:var(--text-2);line-height:2}
+.cast-in{margin-top:14px}
+.cast-in img{width:100%;max-height:46vh;object-fit:contain;background:#000;border-radius:16px}
+.cast-qr{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.cast-qr canvas{width:190px;height:190px;background:#fff;padding:10px;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.18);image-rendering:pixelated}
+.cast-qr .qr-tip{max-width:260px;text-align:start;color:var(--text-2);line-height:1.9;font-size:15px}
+.cast-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--surface-2);color:var(--text-2);font-size:13px;margin-inline-start:8px}
+.cast-tag.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+#castFull{position:fixed;inset:0;z-index:170;background:#000;display:grid;place-items:center}
+#castFull img{width:100%;height:100%;object-fit:contain}
+#castFull .btn{position:fixed;top:16px;inset-inline-start:16px;background:rgba(255,255,255,.14);color:#fff}
+/* ============ side drawer + draw over screen ============ */
+#sideWrap{position:fixed;inset:0;pointer-events:none;z-index:165}
+#sideWrap>*{pointer-events:auto}
+.side-h{position:fixed;top:50%;transform:translateY(-50%);width:26px;height:74px;display:grid;place-items:center;font-size:17px;color:#fff;background:color-mix(in srgb,var(--pri) 78%,#000);box-shadow:0 4px 14px rgba(0,0,0,.3);opacity:.85;transition:opacity .2s,transform .2s}
+.side-h:active{opacity:1}
+.side-h.r{right:0;border-radius:14px 0 0 14px}
+.side-h.l{left:0;border-radius:0 14px 14px 0}
+.side-h.hide{opacity:0;pointer-events:none}
+#sidePanel{position:fixed;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;padding:10px 8px;background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line);animation:sideIn .18s ease-out}
+#sidePanel.side-r{right:10px}
+#sidePanel.side-l{left:10px}
+@keyframes sideIn{from{opacity:0;transform:translateY(-50%) scale(.9)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+.side-b{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;color:var(--text-2);background:var(--surface-2)}
+.side-b:active{background:var(--surface-3)}
+.side-b.on{background:var(--acc);color:#fff}
+.side-b.danger{color:var(--danger)}
+.side-sep{height:1px;background:var(--line);margin:2px 6px}
+#sidePanel.horiz{flex-direction:row;align-items:center}
+#sidePanel.horiz .side-sep{width:1px;height:34px;margin:0 3px}
+#sidePanel.free{transform:none!important}
+.side-b.grip{width:38px;height:38px;font-size:18px;color:var(--muted);background:transparent;cursor:grab;touch-action:none}
+#sidePanel.horiz .side-b.grip{width:26px;height:44px}
+#sidePop{position:fixed;left:0;top:0;width:min(320px,calc(100vw - 96px));max-height:86vh;overflow-y:auto;background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line);padding:14px;animation:sideIn .18s ease-out}
+#sidePop h5{margin:0 0 10px;display:flex;align-items:center;gap:8px;font-size:15px;color:var(--head)}
+.sp-colors{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sp-c{width:36px;height:36px;border-radius:50%;background:var(--c);border:2px solid var(--line)}
+.sp-c.on{outline:3px solid var(--acc);outline-offset:2px}
+.sp-c.wheel{background:conic-gradient(red,#ff0,#0f0,#0ff,#00f,#f0f,red)}
+.sp-row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.sp-row input{flex:1;min-width:0}
+.sp-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.sp-o{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--surface-2);font-size:14px;font-weight:500;text-align:start}
+.sp-o svg{font-size:20px;color:var(--muted);flex:none}
+.sp-o.on{background:color-mix(in srgb,var(--acc) 16%,var(--surface-2));outline:2px solid var(--acc)}
+.sp-o.on svg{color:var(--acc)}
+.sp-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+/* draw over the frozen screen */
+#board.annot-mode{position:fixed;inset:0;z-index:150;background:transparent;display:flex}
+#board.annot-mode #boardStrip,#board.annot-mode #boardDock,#board.annot-mode #focusBtn,#board.annot-mode #bPop{display:none!important}
+#board.annot-mode #boardArea{background:transparent}
+html.annot #os{pointer-events:none}
+html.annot #sideWrap>*,html.annot #board.annot-mode{pointer-events:auto}
+html.annot #toast{z-index:200}
+/* ============ bluetooth transfer card ============ */
+#btReq.xfer .hd .grow{flex:1;min-width:0}
+#btReq .icon-btn.sm{width:36px;height:36px;font-size:16px}
+#btReq .ic.pulse{animation:btPulse 1.4s ease-in-out infinite}
+@keyframes btPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.45)}50%{box-shadow:0 0 0 9px rgba(37,99,235,0)}}
+#btReq .xf-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 /* ============ terminal ============ */
 #term{background:#0b1020}
 #term .term-tabs{background:#141a2e;padding:6px 10px 0;align-items:flex-end;gap:10px;justify-content:space-between}
@@ -930,6 +999,10 @@ html.nocur,html.nocur *{cursor:none!important}
       <div class="vbar" id="ofBar"></div>
       <input type="file" id="ofFile" accept=".docx,.xlsx,.pptx,image/*" hidden>
     </section>
+
+    <!-- ================= WIRELESS SHARING ================= -->
+    <section class="screen app" id="cast"><div class="main" id="castMain"></div></section>
+    <div id="castFull" hidden></div>
 
     <!-- ================= TERMINAL ================= -->
     <section class="screen app" id="term">
@@ -1294,7 +1367,7 @@ const store={
   set(k,v){try{localStorage.setItem('alharthia.'+k,JSON.stringify(v));return true}catch(e){return false}},
   del(k){try{localStorage.removeItem('alharthia.'+k)}catch(e){}}
 };
-const OS_VERSION='1.4';
+const OS_VERSION='1.7';
 const DEF={
   school:'ثانوية المتميزين في الحارثية', cls:'الصف الثالث متوسط -ج-',
   showSchool:true, showText:true, showLogo:true, strip:true, logo:null,
@@ -1309,7 +1382,7 @@ const DEF={
   contrast:false, reduceMotion:false, bigCursor:false, hideCursor:false, clickSound:false, osk:true, boldText:false,
   lang:'ar', dateFmt:'long', tz:'Asia/Baghdad', autoTime:true,
   pin:null, lockOnStart:false, lockSettings:false, lockStore:false,
-  startApp:'home', kbdLangs:['ar','en','fr'], kbdLang:'ar', oskMode:'auto', oskSize:'m', oskPreview:true, oskTopBtn:true, oskTermKeys:true, dock:['board','pdf','files','chromium','store'], hiddenApps:[], defaults:{pdf:'pdf',docx:'word',img:'viewer',video:'vlc'}, bootSound:true, offOn:false, offTime:'14:00', autoUpdate:true
+  startApp:'home', sideDir:'v', sidePos:null, kbdLangs:['ar','en','fr'], kbdLang:'ar', oskMode:'auto', oskSize:'m', oskPreview:true, oskTopBtn:true, oskTermKeys:true, dock:['board','pdf','files','chromium','store'], hiddenApps:[], defaults:{pdf:'pdf',docx:'word',img:'viewer',video:'vlc'}, bootSound:true, offOn:false, offTime:'14:00', autoUpdate:true
 };
 const S=Object.assign(structuredClone(DEF),store.get('settings',{}));
 let saveT=0;
@@ -1481,7 +1554,7 @@ function applyTheme(){
 }
 
 /* ---------------- navigation ---------------- */
-const TITLES={home:'',media:'مشغل الوسائط',term:'الطرفية',apps:'التطبيقات',board:'السبورة',pdf:'قارئ PDF',files:'مستكشف الملفات',office:'المستندات',browser:'Chromium',store:'متجر التطبيقات',timer:'المؤقت',attend:'الحضور والغياب',settings:'الإعدادات',gen:''};
+const TITLES={home:'',media:'مشغل الوسائط',term:'الطرفية',cast:'العرض اللاسلكي',apps:'التطبيقات',board:'السبورة',pdf:'قارئ PDF',files:'مستكشف الملفات',office:'المستندات',browser:'Chromium',store:'متجر التطبيقات',timer:'المؤقت',attend:'الحضور والغياب',settings:'الإعدادات',gen:''};
 let current='home';
 const onShow={}, onHide={};
 function go(id,arg){
@@ -1764,6 +1837,7 @@ function boxPoly(it,seg=48){
     case 'triangle': P=[[cx,y],[x+w,y+h],[x,y+h]]; break;
     case 'rtri': P=[[x,y],[x,y+h],[x+w,y+h]]; break;
     case 'diamond': P=[[cx,y],[x+w,cy],[cx,y+h],[x,cy]]; break;
+    case 'semi': { P=[]; const n=40; for(let i=0;i<=n;i++){ const a=Math.PI+i*Math.PI/n; P.push([cx+Math.cos(a)*w/2,y+h+Math.sin(a)*h]); } break; }
     case 'pentagon': P=regPoly(cx,cy+h*.05,w/2,h/2*1.05,5); break;
     case 'hexagon': P=regPoly(cx,cy,w/2,h/2,6,0); break;
     case 'star': P=regPoly(cx,cy+h*.06,w/2,h/2*1.06,5,-Math.PI/2,.45); break;
@@ -1961,7 +2035,7 @@ function drawBg(x,bg,W,H,onload){
    WHITEBOARD — controller
    ===================================================================== */
 const PEN_KINDS=[['pen','قلم عادي','pen'],['fountain','قلم حبر','fountain'],['callig','قلم خط عربي','nib'],['hl','قلم تظليل','marker'],['laser','قلم ليزر','laser']];
-const SHAPE_KINDS=[['line','خط'],['dline','خط متقطع'],['arrow','سهم'],['darrow','سهم مزدوج'],['rect','مستطيل'],['circle','دائرة'],['ellipse','بيضوي'],['triangle','مثلث'],['rtri','مثلث قائم'],['diamond','معيّن'],['pentagon','خماسي'],['hexagon','سداسي'],['star','نجمة']];
+const SHAPE_KINDS=[['line','خط'],['semi','نصف دائرة'],['dline','خط متقطع'],['arrow','سهم'],['darrow','سهم مزدوج'],['rect','مستطيل'],['circle','دائرة'],['ellipse','بيضوي'],['triangle','مثلث'],['rtri','مثلث قائم'],['diamond','معيّن'],['pentagon','خماسي'],['hexagon','سداسي'],['star','نجمة']];
 const INST_DEF={
   ruler:{n:'مسطرة ٣٠ سم',i:'ruler',w:30*PXCM+48,h:92},
   sq45:{n:'مثلث قائم ٤٥°',i:'setsq',w:16*PXCM,h:16*PXCM},
@@ -2005,7 +2079,7 @@ const Board={
     for(const x of [this.xBg,this.xBase,this.xLive]){ x.setTransform(d,0,0,d,0,0); x.imageSmoothingQuality='high'; }
     this.renderBg(); this.redraw(); this.layoutInst(); this.updateSelUI();
   },
-  renderBg(){ drawBg(this.xBg,this.page.bg,this.W,this.H,()=>this.renderBg()); this.area.style.background=''; },
+  renderBg(){ if(this.overlay){ this.xBg.clearRect(-9e4,-9e4,2e5,2e5); this.area.style.background='transparent'; return; } drawBg(this.xBg,this.page.bg,this.W,this.H,()=>this.renderBg()); this.area.style.background=''; },
   redraw(exclude){
     const x=this.xBase; x.save(); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,this.cBase.width,this.cBase.height); x.restore();
     for(const it of this.page.items){ if(exclude&&exclude.has(it.id)) continue; if(it.t==='clear') continue; drawItem(x,it,this.W,()=>this.redraw()); }
@@ -3366,6 +3440,7 @@ const APPS_BUILTIN=[
   {id:'ppt',n:'عروض PowerPoint',sub:'LibreOffice Impress',i:'slides',c:'#c2410c',office:'ppt'},
   {id:'excel',n:'جداول Excel',sub:'LibreOffice Calc',i:'table',c:'#16a34a',office:'excel'},
   {id:'store',n:'متجر التطبيقات',i:'store',c:'#7c3aed',go:'store'},
+  {id:'cast',n:'العرض اللاسلكي',sub:'اعرض شاشتك أو استقبل شاشة',i:'cast',c:'#0891b2',go:'cast'},
   {id:'media',n:'مشغل الوسائط',sub:'فيديو وصوت MP4 · MP3',i:'video',c:'#db2777',go:'media'},
   {id:'terminal',n:'الطرفية',sub:'Terminal',i:'terminal',c:'#1f2937',go:'term'},
   {id:'chromiumfull',n:'Chromium الكامل',sub:'المتصفح الأصلي',i:'globe',c:'#1e40af',native:'chromium'},
@@ -3660,7 +3735,7 @@ const Extra={
     time(){
       return `<h1 class="h1">اللغة والوقت</h1><p class="sub">لغة النظام، المنطقة الزمنية، وشكل التاريخ والأرقام.</p>
       <div class="card"><h3>${icon('globe')}اللغة</h3>
-        ${sel('lang','لغة الواجهة',[['ar','العربية'],['en','English (قريباً)'],['ku','کوردی (قريباً)']])}
+        ${sel('lang','لغة الواجهة',[['ar','العربية'],['en','English'],['ku','کوردی (قريباً)']])}
         ${sw('ar','الأرقام العربية (١٢٣)')}
         <div class="row"><span class="lbl">لغات الكيبورد<span class="hint">تتبدل بزر 🌐 أو من الشريط فوق الكيبورد — نفس اللغات تنضاف لكيبورد برامج النظام</span></span><div class="chips">${Object.entries(OSK_LANGS).map(([l,L])=>`<button class="chip${(S.kbdLangs||[]).includes(l)?' on':''}" data-kl="${l}">${L.n}</button>`).join('')}</div></div>
         <div class="row"><label>جرّب الكيبورد</label><input class="field" type="text" placeholder="اكتب هنا…"></div>
@@ -3684,6 +3759,11 @@ const Extra={
       <div class="card"><h3>${icon('cursor')}المؤشر والإدخال</h3>
         ${sw('bigCursor','مؤشر ماوس كبير')}
         ${sw('hideCursor','إخفاء المؤشر','مناسب لشاشات اللمس')}
+      </div>
+      <div class="card"><h3>${icon('grip')}القائمة الجانبية</h3>
+        ${sel('sideDir','اتجاه القائمة',[['v','عمودية'],['h','أفقية']])}
+        <div class="row"><span class="lbl">مكان القائمة<span class="hint">تكدر تسحبها من زر النقاط لأي مكان بالشاشة</span></span><button class="btn sm" data-x="sideReset">${icon('restart')}رجّعها لمكانها</button></div>
+        <p class="hint">السهم الصغير على الجانبين يفتح القائمة بكل الصفحات.</p>
       </div>
       <div class="card"><h3>${icon('keyboard')}كيبورد الشاشة</h3>
         ${sel('oskMode','متى يطلع الكيبورد',[['auto','تلقائياً عند لمس خانة الكتابة'],['always','دائماً (حتى بالماوس)'],['off','مطفأ']])}
@@ -3752,8 +3832,12 @@ const Extra={
     if(key==='slideshow'||key==='slideMin') this.startSlides();
     if(key==='autoTime') this.renderSec('time');
     if(key==='orient'||key==='res') toast('يطبَّق على الشاشة الحقيقية بعد التأكيد');
-    if(key==='lang'&&S.lang!=='ar'){ toast('هاي اللغة راح تتوفر بالإصدار القادم',false); S.lang='ar'; this.renderSec('time'); }
+    if(key==='lang'){
+      if(S.lang==='ku'){ toast('الكردية راح تتوفر بالإصدار القادم',false); S.lang='ar'; this.renderSec('time'); }
+      else { save(); Lang.apply(); if(S.lang==='ar') return; this.renderSec('time'); toast('تم تبديل لغة الواجهة'); }
+    }
     if(key==='oskSize'&&!Keyboard.el.hidden) Keyboard.show();
+    if(key==='sideDir'&&Side.open) Side.show(Side.side);
     if(/^osk|^kbd/.test(key)){ Keyboard.syncBtn(); if(key==='oskMode'&&S.oskMode==='off') Keyboard.hide(); if(window.Native&&Native.on) Native.pushKbd(); }
     applySystemPrefs(); layoutAll();
   },
@@ -3787,11 +3871,12 @@ const Extra={
       if(a==='lockNow') lockNow();
       if(a==='clearHist') toast('تم مسح السجل');
       if(a==='factory'){ if(await confirmBox('إعادة ضبط المصنع','راح تنحذف كل الإعدادات والسبورات والملفات والصور والبرامج المثبتة.','إعادة الضبط',true,'restart')){ try{ Object.keys(localStorage).filter(k=>k.startsWith('alharthia.')).forEach(k=>localStorage.removeItem(k)); }catch(_){} sysMessage('جاري إعادة ضبط النظام…',null,()=>location.reload()); } }
-      if(a==='restart'){ Board.persist(); sysMessage('جاري إعادة التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
-      if(a==='off'){ Board.persist(); sysMessage('جاري حفظ العمل وإيقاف التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
+      if(a==='restart'){ Board.persist(); sysMessage('Restarting…','hold'); }
+      if(a==='off'){ Board.persist(); sysMessage('Shutting down…','hold'); }
       if(a==='calib') this.calibrate();
       if(a==='export') this.exportFile();
       if(a==='import') $('#impFile').click();
+      if(a==='sideReset'){ S.sidePos=null; save('تم إرجاع القائمة لمكانها'); if(Side.open) Side.show(Side.side); }
       if(a==='resetSettings'){ if(await confirmBox('إرجاع الإعدادات','كل الإعدادات ترجع للأصل (الملفات والسبورات تبقى).','إرجاع',true,'restart')){ const keep={installed:S.installed}; Object.keys(S).forEach(k=>delete S[k]); Object.assign(S,structuredClone(DEF),keep); store.set('settings',S); location.reload(); } }
       if(a==='checkUpd'){ await Files.progress('جاري البحث عن تحديثات…',200*MB); toast('النظام محدَّث لآخر إصدار'); }
     });
@@ -3814,7 +3899,7 @@ const Extra={
       if(!S.offOn) return; const n=tzNow(), day=n.toDateString(), hm=pad(n.getHours())+':'+pad(n.getMinutes());
       const [h,mn]=S.offTime.split(':').map(Number); const w=new Date(n); w.setHours(h,mn-5,0,0); const whm=pad(w.getHours())+':'+pad(w.getMinutes());
       if(hm===whm&&warned!==day){ warned=day; toast('تنبيه: الجهاز راح يطفي بعد ٥ دقائق — احفظ عملك',false); beep(2,700); }
-      if(hm===S.offTime&&fired!==day){ fired=day; Board.persist(); sysMessage('انتهى الدوام — جاري إيقاف التشغيل التلقائي…','هذه معاينة — المس الشاشة للرجوع'); }
+      if(hm===S.offTime&&fired!==day){ fired=day; Board.persist(); sysMessage('Shutting down…','hold'); }
     },20e3);
     this.startSlides(); applySystemPrefs();
   },
@@ -4537,6 +4622,624 @@ ICONS.plus=ICONS.plus||'<path d="M12 5v14M5 12h14"/>';
 ICONS.paste='<rect x="8" y="3" width="8" height="4" rx="1"/><path d="M16 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/>';
 
 /* =====================================================================
+   SIDE DRAWER + DRAW-OVER-SCREEN MODE
+   سهم صغير ثابت على الجانبين، يفتح قائمة أيقونات سريعة،
+   وبيها وضع «الكتابة فوق الشاشة»: يجمّد الصفحة وتكدر تكتب عليها بأي مكان.
+   ===================================================================== */
+ICONS.semi='<path d="M3 16h18"/><path d="M21 16a9 9 0 0 0-18 0"/>';
+ICONS.square='<rect x="4" y="4" width="16" height="16" rx="1"/>';
+ICONS.penScreen='<path d="M4 20h16"/><path d="m14.5 3.5 6 6L9 21H3v-6z"/>';
+ICONS.camera='<path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/>';
+ICONS.grip='<circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/>';
+ICONS.exit='<path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"/><path d="m16 16 4-4-4-4"/><path d="M20 12H10"/>';
+const SIDE_SHAPES=[['line','خط مستقيم','line'],['semi','نصف دائرة','semi'],['circle','دائرة','circle'],['rect','مربع / مستطيل','square'],['triangle','مثلث','triangle']];
+const SIDE_COLORS=['#111827','#e11d48','#f0703e','#f59e0b','#16a34a','#2563eb','#7c3aed','#ffffff'];
+
+const Side={
+  open:false, side:'r', pop:null, snap:null,
+  init(){
+    const wrap=document.createElement('div'); wrap.id='sideWrap';
+    wrap.innerHTML=`<button class="side-h r" data-sideh="r" title="أدوات سريعة">${icon('chevR')}</button>
+      <button class="side-h l" data-sideh="l" title="أدوات سريعة">${icon('chevL')}</button>
+      <div id="sidePanel" hidden></div><div id="sidePop" hidden></div>`;
+    document.body.appendChild(wrap);
+    wrap.addEventListener('click',e=>this.onClick(e));
+    wrap.addEventListener('pointerdown',e=>{ const g=e.target.closest('.side-b.grip'); if(g){ e.preventDefault(); this.startDrag(e); } });
+    addEventListener('resize',()=>{ if(this.open) this.show(this.side); });
+    wrap.addEventListener('input',e=>{
+      const r=e.target.closest('input[type=range]'); if(!r) return;
+      setRangeFill(r);
+      if(r.dataset.k==='ink'){ Board.sizes.ink=+r.value; Board.sizes.shape=+r.value; }
+      if(r.dataset.k==='eraser') Board.sizes.eraser=+r.value;
+      Board.syncSize();
+    });
+    addEventListener('keydown',e=>{ if(e.key==='Escape'){ if(this.pop) this.closePop(true); else if(this.open) this.hide(); } });
+  },
+  /* ---------- panel ---------- */
+  show(side){
+    this.side=side||this.side; this.open=true;
+    const p=$('#sidePanel');
+    const horiz=S.sideDir==='h';
+    p.className='side-'+this.side+(horiz?' horiz':'')+(S.sidePos?' free':''); p.hidden=false;
+    if(S.sidePos){ p.style.left=S.sidePos.x+'px'; p.style.top=S.sidePos.y+'px'; p.style.right='auto'; p.style.transform='none'; }
+    else { p.style.left=p.style.top=p.style.right=p.style.transform=''; }
+    p.innerHTML=(Annot.on?this.drawTools():this.mainTools()).map(b=>b===null?'<span class="side-sep"></span>':
+      `<button class="side-b${b.on?' on':''}${b.danger?' danger':''}${b.grip?' grip':''}" data-sb="${b.k}" title="${esc(b.t)}" aria-label="${esc(b.t)}">${icon(b.i)}</button>`).join('');
+    $$('#sideWrap .side-h').forEach(h=>h.classList.toggle('hide',h.dataset.sideh===this.side||!!S.sidePos));
+    this.clampPos();
+  },
+  clampPos(){
+    if(!S.sidePos) return;
+    const p=$('#sidePanel'), r=p.getBoundingClientRect();
+    S.sidePos.x=clamp(S.sidePos.x,4,innerWidth-r.width-4); S.sidePos.y=clamp(S.sidePos.y,4,innerHeight-r.height-4);
+    p.style.left=S.sidePos.x+'px'; p.style.top=S.sidePos.y+'px';
+  },
+  startDrag(e){
+    const p=$('#sidePanel'), r=p.getBoundingClientRect();
+    const dx=e.clientX-r.left, dy=e.clientY-r.top;
+    this.closePop();
+    const mv=ev=>{ S.sidePos={x:ev.clientX-dx,y:ev.clientY-dy}; p.classList.add('free'); p.style.right='auto'; p.style.transform='none'; this.clampPos(); };
+    const up=()=>{ removeEventListener('pointermove',mv); removeEventListener('pointerup',up); save(); this.show(this.side); };
+    addEventListener('pointermove',mv); addEventListener('pointerup',up);
+  },
+  hide(){ this.open=false; this.closePop(); $('#sidePanel').hidden=true; $$('#sideWrap .side-h').forEach(h=>h.classList.remove('hide')); },
+  mainTools(){
+    return [{k:'grip',t:'اسحب لتحريك القائمة',i:'grip',grip:true},null,
+      {k:'files',t:'الملفات',i:'folder'},{k:'bt',t:'البلوتوث',i:'bluetooth'},{k:'board',t:'السبورة',i:'board'},
+      {k:'shot',t:'لقطة شاشة',i:'camera'},{k:'cast',t:'العرض اللاسلكي',i:'cast'},null,
+      {k:'annot',t:'الكتابة فوق الشاشة',i:'penScreen'},null,{k:'close',t:'إغلاق القائمة',i:'x'}];
+  },
+  drawTools(){
+    const B=Board;
+    return [{k:'grip',t:'اسحب لتحريك القائمة',i:'grip',grip:true},null,
+      {k:'pen',t:'القلم واللون والسُمك',i:'pen',on:B.tool==='ink'},
+      {k:'eraser',t:'الممحاة',i:'eraser',on:B.tool==='eraser'},
+      {k:'shapes',t:'الأشكال',i:'shapes',on:B.tool==='shape'},
+      {k:'geo',t:'الأدوات الهندسية',i:'setsq',on:!!B.inst.length||B.tool==='compass'},
+      {k:'assist',t:'مساعد الخط المستقيم',i:'straight',on:B.assist},null,
+      {k:'undo',t:'تراجع',i:'undo'},{k:'clear',t:'مسح كل الكتابة',i:'trash'},
+      {k:'shot',t:'حفظ الصورة الحالية PNG',i:'camera'},null,
+      {k:'exit',t:'الخروج من وضع الكتابة',i:'exit',danger:true}];
+  },
+  onClick(e){
+    const h=e.target.closest('[data-sideh]');
+    if(h){ const s=h.dataset.sideh; if(this.open&&this.side===s) this.hide(); else this.show(s); return; }
+    const o=e.target.closest('[data-sopt]');
+    if(o){ this.optClick(o.dataset.sopt,o); return; }
+    const b=e.target.closest('[data-sb]'); if(!b) return;
+    const k=b.dataset.sb;
+    if(k==='grip') return;
+    if(['pen','eraser','shapes','geo'].includes(k)) return this.togglePop(k);
+    this.closePop();
+    switch(k){
+      case 'files': Annot.exit(); this.hide(); go('files'); break;
+      case 'bt': Annot.exit(); this.hide(); go('settings','conn'); break;
+      case 'board': Annot.exit(); this.hide(); go('board'); break;
+      case 'annot': Annot.enter(); this.show(this.side); break;
+      case 'assist': Board.doAct('assist'); this.show(this.side); break;
+      case 'undo': Board.undo(); break;
+      case 'clear': Board.clearPage(); break;
+      case 'exit': Annot.exit(); this.show(this.side); break;
+      case 'cast': Annot.exit(); this.hide(); go('cast'); break;
+      case 'shot': Shot.take(); break;
+      case 'close': this.hide(); break;
+    }
+  },
+  /* ---------- popups ---------- */
+  togglePop(name){ if(this.pop===name){ this.closePop(true); return; } this.openPop(name); },
+  openPop(name){
+    const B=Board;
+    this.snap={color:B.color,ink:B.sizes.ink,shape:B.shape,shapeSize:B.sizes.shape,eraser:B.eraser,erSize:B.sizes.eraser,fill:B.fill,tool:B.tool,inst:B.inst.map(i=>i.kind)};
+    this.pop=name;
+    const el=$('#sidePop'); el.hidden=false; el.className='side-'+this.side;
+    el.innerHTML=this.popHTML(name)+`<div class="sp-btns"><button class="btn sm ghost" data-sopt="cancel">${icon('x')}إلغاء</button><button class="btn sm primary" data-sopt="ok">${icon('check')}تطبيق</button></div>`;
+    $$('#sidePop input[type=range]').forEach(r=>setRangeFill(r));
+    const r=$('#sidePanel').getBoundingClientRect(), pw=el.offsetWidth, ph=el.offsetHeight;
+    let left,top;
+    if(S.sideDir==='h'){ left=clamp(r.left+r.width/2-pw/2,8,innerWidth-pw-8); top=r.top>innerHeight/2?r.top-ph-10:r.bottom+10; }
+    else { left=r.left>innerWidth/2?r.left-pw-10:r.right+10; top=clamp(r.top,8,innerHeight-ph-8); }
+    el.style.left=clamp(left,8,Math.max(8,innerWidth-pw-8))+'px'; el.style.top=clamp(top,8,Math.max(8,innerHeight-ph-8))+'px';
+  },
+  closePop(revert){
+    if(revert&&this.snap){ const B=Board, s=this.snap;
+      Object.assign(B,{color:s.color,shape:s.shape,eraser:s.eraser,fill:s.fill});
+      B.sizes.ink=s.ink; B.sizes.shape=s.shapeSize; B.sizes.eraser=s.erSize;
+      if(B.tool!==s.tool) B.setTool(s.tool);
+      if(B.inst.map(i=>i.kind).join()!==s.inst.join()){ B.inst=B.inst.filter(i=>s.inst.includes(i.kind)); B.renderInst(); }
+      B.syncColors(); B.syncSize(); B.redraw&&B.redraw();
+    }
+    this.snap=null; this.pop=null; const el=$('#sidePop'); if(el) el.hidden=true;
+    if(this.open) this.show(this.side);
+  },
+  popHTML(name){
+    const B=Board;
+    const colors=()=>`<div class="sp-colors">${SIDE_COLORS.map(c=>`<button class="sp-c${c===B.color?' on':''}" data-sopt="color" data-c="${c}" style="--c:${c}"></button>`).join('')}
+      <button class="sp-c wheel" data-sopt="wheel" title="كل الألوان"></button></div>`;
+    const size=(k,v,max)=>`<div class="sp-row"><span>السُمك</span><input type="range" data-k="${k}" min="1" max="${max}" value="${v}"><b id="spSzV">${nf(v)}</b></div>`;
+    switch(name){
+      case 'pen': return `<h5>${icon('pen')}القلم</h5>${colors()}${size('ink',B.sizes.ink,40)}`;
+      case 'eraser': return `<h5>${icon('eraser')}الممحاة</h5>
+        <div class="sp-opts"><button class="sp-o${B.eraser==='pixel'?' on':''}" data-sopt="er" data-v="pixel">${icon('eraser')}ممحاة عادية</button>
+        <button class="sp-o${B.eraser==='object'?' on':''}" data-sopt="er" data-v="object">${icon('objErase')}تمسح الخط كامل</button></div>${size('eraser',B.sizes.eraser,220)}`;
+      case 'shapes': return `<h5>${icon('shapes')}الأشكال</h5>
+        <div class="sp-opts">${SIDE_SHAPES.map(([k,t,i])=>`<button class="sp-o${B.shape===k?' on':''}" data-sopt="shape" data-v="${k}">${icon(i)}${t}</button>`).join('')}</div>
+        <div class="sp-opts"><button class="sp-o${B.fill?' on':''}" data-sopt="fill">${icon('fill')}تعبئة الشكل</button></div>${colors()}`;
+      case 'geo': return `<h5>${icon('setsq')}أدوات هندسية</h5><div class="sp-opts">
+        ${Object.entries(INST_DEF).map(([k,d])=>`<button class="sp-o${B.inst.some(i=>i.kind===k)?' on':''}" data-sopt="geo" data-v="${k}">${icon(d.i)}${d.n}</button>`).join('')}
+        <button class="sp-o${B.tool==='compass'?' on':''}" data-sopt="geo" data-v="compass">${icon('compass')}فرجال</button>
+        <button class="sp-o" data-sopt="geo" data-v="axes">${icon('axes')}محاور</button>
+        <button class="sp-o" data-sopt="geo" data-v="hide">${icon('x')}إخفاء الأدوات</button></div>`;
+    }
+    return '';
+  },
+  async optClick(a,b){
+    const B=Board, v=b.dataset.v;
+    if(a==='ok'){ this.snap=null; this.closePop(); return; }
+    if(a==='cancel'){ this.closePop(true); return; }
+    if(a==='color'){ B.setColor(b.dataset.c); if(B.tool!=='shape') B.setTool('ink'); this.openPop(this.pop); return; }
+    if(a==='wheel'){ const c=await pickColorModal('لون القلم',B.color); if(c){ B.setColor(c); pushRecent(c); } this.openPop(this.pop); return; }
+    if(a==='er'){ B.eraser=v; B.setTool('eraser'); this.openPop('eraser'); return; }
+    if(a==='shape'){ B.shape=v; B.setTool('shape'); this.openPop('shapes'); return; }
+    if(a==='fill'){ B.fill=!B.fill; this.openPop('shapes'); return; }
+    if(a==='geo'){
+      if(v==='compass'){ B.setTool('compass'); toast('فرجال: اضغط على المركز واسحب'); }
+      else if(v==='axes') B.addAxes();
+      else if(v==='hide'){ B.inst=[]; B.renderInst(); }
+      else B.addInst(v);
+      this.openPop('geo'); return;
+    }
+  }
+};
+
+/* ---------- draw over the frozen screen ---------- */
+const Annot={
+  on:false, prev:null, doc:null,
+  enter(){
+    if(this.on) return;
+    this.prev=current;
+    this.doc={pages:Board.pages,pi:Board.pi};
+    Board.pages=[Board.newPage({type:'none'})]; Board.pi=0;
+    Board.overlay=true;
+    document.documentElement.classList.add('annot');
+    const b=$('#board'); b.classList.add('on','annot-mode');
+    Board.setTool('ink');
+    requestAnimationFrame(()=>{ Board.resize(); Board.goPage(0); });
+    this.on=true;
+    toast('وضع الكتابة فوق الشاشة — الصفحة مجمّدة، اكتب بأي مكان');
+  },
+  exit(){
+    if(!this.on) return;
+    this.on=false;
+    Board.closePop&&Board.closePop();
+    Board.inst=[]; Board.renderInst();
+    Board.pages=this.doc.pages; Board.pi=this.doc.pi; this.doc=null;
+    Board.overlay=false;
+    document.documentElement.classList.remove('annot');
+    const b=$('#board'); b.classList.remove('annot-mode');
+    if(this.prev!=='board') b.classList.remove('on');
+    requestAnimationFrame(()=>{ Board.resize(); Board.goPage(Board.pi); });
+  }
+};
+
+/* ---------- screenshot ---------- */
+const Shot={
+  busy:false,
+  async take(){
+    if(this.busy) return; this.busy=true;
+    const panelWasOpen=Side.open;
+    Side.closePop(); $('#sidePanel').hidden=true; const el=$('#btReq'); const cardWas=el.hidden; el.hidden=true;
+    await new Promise(r=>setTimeout(r,260));
+    try{
+      if(window.Native&&Native.on){
+        const r=await API.post('/api/screenshot',{});
+        this.done(r.path,r.name);
+      } else {
+        const url=Board.overlay?$('#bdBase').toDataURL('image/png'):($('#bdBase')?$('#bdBase').toDataURL('image/png'):null);
+        if(url) downloadURL(url,'لقطة-'+Date.now()+'.png');
+        toast('تم حفظ اللقطة (معاينة المتصفح تحفظ الرسم فقط)');
+      }
+    }catch(e){ toast('تعذر حفظ اللقطة: '+(window.errMsg?errMsg(e):e),false); }
+    finally{
+      this.busy=false; if(!cardWas) el.hidden=false;
+      if(panelWasOpen) Side.show(Side.side);
+    }
+  },
+  done(path,name){
+    beep(1,1200);
+    const el=$('#btReq'); el.hidden=false; el.classList.add('xfer');
+    el.innerHTML=`<div class="hd"><span class="ic" style="background:var(--ok)">${icon('camera')}</span>
+        <div class="grow"><b>تم حفظ لقطة الشاشة</b><div class="hint">محفوظة في مجلد «الصور»</div></div>
+        <button class="icon-btn sm" data-shot="hide">${icon('x')}</button></div>
+      <div class="fn">${esc(name||'')}</div>
+      <div class="btns" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" data-shot="folder">${icon('folder')}فتح المجلد</button><button class="btn primary" data-shot="open">فتح الصورة</button></div>`;
+    el.onclick=e=>{ const b=e.target.closest('[data-shot]'); if(!b) return; el.hidden=true;
+      if(b.dataset.shot==='folder'){ go('files'); Files.open('internal','pics'); }
+      if(b.dataset.shot==='open'&&path) openFile(nodeOf({path,name:name||path.split('/').pop(),size:0,mtime:Date.now()})); };
+    clearTimeout(this.hideT); this.hideT=setTimeout(()=>{ el.hidden=true; },12000);
+  }
+};
+
+/* =====================================================================
+   QR CODE — مولّد صغير (وضع البايت، تصحيح خطأ M، إصدارات ١..١٠)
+   يشتغل بدون إنترنت وبدون مكتبات.
+   ===================================================================== */
+const QR=(()=>{
+  const EXP=new Array(512), LOG=new Array(256);
+  for(let i=0,x=1;i<255;i++){ EXP[i]=x; LOG[x]=i; x<<=1; if(x&256) x^=0x11d; }
+  for(let i=255;i<512;i++) EXP[i]=EXP[i-255];
+  const mul=(a,b)=>(a&&b)?EXP[LOG[a]+LOG[b]]:0;
+  // total data codewords / (ec per block, g1 blocks, g1 data, g2 blocks, g2 data) for level M
+  const CAP=[0,16,28,44,64,86,108,124,154,182,216];
+  const BLK=[null,[10,1,16,0,0],[16,1,28,0,0],[26,1,44,0,0],[18,2,32,0,0],[24,2,43,0,0],
+    [16,4,27,0,0],[18,4,31,0,0],[22,2,38,2,39],[22,3,36,2,37],[26,4,43,1,44]];
+  const ALIGN=[null,[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50]];
+
+  function rsGen(n){ let g=[1]; for(let i=0;i<n;i++){ const ng=new Array(g.length+1).fill(0);
+    for(let j=0;j<g.length;j++){ ng[j]^=mul(g[j],1); ng[j+1]^=mul(g[j],EXP[i]); } g=ng; } return g; }
+  function rsEnc(data,n){ const g=rsGen(n), res=new Array(n).fill(0);
+    for(const d of data){ const f=d^res[0]; res.shift(); res.push(0);
+      for(let i=0;i<n;i++) res[i]^=mul(g[i+1],f); } return res; }
+
+  function bits(str){
+    const bytes=new TextEncoder().encode(str);
+    let v=1; while(v<=10&&bytes.length+ (v<10?2:3) > CAP[v]) v++;
+    if(v>10) throw new Error('النص طويل');
+    const cap=CAP[v]*8, out=[];
+    const push=(val,len)=>{ for(let i=len-1;i>=0;i--) out.push((val>>i)&1); };
+    push(4,4); push(bytes.length, v<10?8:16);
+    bytes.forEach(b=>push(b,8));
+    for(let i=0;i<4&&out.length<cap;i++) out.push(0);
+    while(out.length%8) out.push(0);
+    const pads=[0xEC,0x11]; let k=0;
+    while(out.length<cap){ push(pads[k++%2],8); }
+    const cw=[]; for(let i=0;i<out.length;i+=8){ let b=0; for(let j=0;j<8;j++) b=(b<<1)|out[i+j]; cw.push(b); }
+    return {v,cw};
+  }
+
+  function interleave(v,cw){
+    const [ec,g1,d1,g2,d2]=BLK[v], blocks=[], ecs=[];
+    let p=0;
+    for(let i=0;i<g1;i++){ const b=cw.slice(p,p+d1); p+=d1; blocks.push(b); ecs.push(rsEnc(b,ec)); }
+    for(let i=0;i<g2;i++){ const b=cw.slice(p,p+d2); p+=d2; blocks.push(b); ecs.push(rsEnc(b,ec)); }
+    const out=[], maxD=Math.max(d1,d2||0);
+    for(let i=0;i<maxD;i++) blocks.forEach(b=>{ if(i<b.length) out.push(b[i]); });
+    for(let i=0;i<ec;i++) ecs.forEach(b=>out.push(b[i]));
+    return out;
+  }
+
+  function build(v,data){
+    const n=21+(v-1)*4;
+    const m=Array.from({length:n},()=>new Array(n).fill(null));
+    const set=(r,c,val)=>{ if(r>=0&&r<n&&c>=0&&c<n) m[r][c]=val; };
+    const finder=(r,c)=>{ for(let i=-1;i<=7;i++) for(let j=-1;j<=7;j++){
+      const rr=r+i, cc=c+j; if(rr<0||cc<0||rr>=n||cc>=n) continue;
+      const on=(i>=0&&i<=6&&(j===0||j===6))||(j>=0&&j<=6&&(i===0||i===6))||(i>=2&&i<=4&&j>=2&&j<=4);
+      set(rr,cc,on?1:0); } };
+    finder(0,0); finder(0,n-7); finder(n-7,0);
+    for(let i=8;i<n-8;i++){ set(6,i,i%2?0:1); set(i,6,i%2?0:1); }
+    for(const r of ALIGN[v]) for(const c of ALIGN[v]){
+      if((r<9&&c<9)||(r<9&&c>n-10)||(r>n-10&&c<9)) continue;
+      for(let i=-2;i<=2;i++) for(let j=-2;j<=2;j++)
+        set(r+i,c+j,(Math.max(Math.abs(i),Math.abs(j))!==1)?1:0);
+    }
+    set(n-8,8,1);
+    // reserve format + version areas
+    for(let i=0;i<9;i++){ if(m[8][i]===null) set(8,i,2); if(m[i][8]===null) set(i,8,2); }
+    for(let i=0;i<8;i++){ if(m[8][n-1-i]===null) set(8,n-1-i,2); if(m[n-1-i][8]===null) set(n-1-i,8,2); }
+    if(v>=7){ for(let i=0;i<6;i++) for(let j=0;j<3;j++){ set(n-11+j,i,2); set(i,n-11+j,2); } }
+    // place data
+    let bi=0, dir=-1, row=n-1;
+    const bitAt=k=>(data[k>>3]>>(7-(k&7)))&1;
+    for(let col=n-1;col>0;col-=2){
+      if(col===6) col--;
+      for(let i=0;i<n;i++){
+        const r=dir<0?n-1-i:i;
+        for(const c of [col,col-1]){
+          if(m[r][c]!==null) continue;
+          m[r][c]=bi<data.length*8?bitAt(bi):0; bi++;
+        }
+      }
+      dir=-dir;
+    }
+    return m;
+  }
+
+  const MASKS=[(r,c)=>(r+c)%2===0,(r,c)=>r%2===0,(r,c)=>c%3===0,(r,c)=>(r+c)%3===0,
+    (r,c)=>((r>>1)+Math.floor(c/3))%2===0,(r,c)=>((r*c)%2+(r*c)%3)===0,
+    (r,c)=>(((r*c)%2+(r*c)%3)%2)===0,(r,c)=>(((r+c)%2+(r*c)%3)%2)===0];
+
+  function fmtBits(mask){
+    const data=(0<<3)|mask;              // level M = 00
+    let d=data<<10, g=0x537;
+    for(let i=4;i>=0;i--) if(d&(1<<(i+10))) d^=g<<i;
+    return ((data<<10)|d)^0x5412;
+  }
+  function verBits(v){
+    let d=v<<12, g=0x1f25;
+    for(let i=5;i>=0;i--) if(d&(1<<(i+12))) d^=g<<i;
+    return (v<<12)|d;
+  }
+
+  function penalty(m){
+    const n=m.length; let p=0;
+    const run=(get)=>{ for(let i=0;i<n;i++){ let c=1;
+      for(let j=1;j<n;j++){ if(get(i,j)===get(i,j-1)) c++; else { if(c>=5) p+=3+(c-5); c=1; } }
+      if(c>=5) p+=3+(c-5); } };
+    run((i,j)=>m[i][j]); run((i,j)=>m[j][i]);
+    for(let r=0;r<n-1;r++) for(let c=0;c<n-1;c++){
+      const s=m[r][c]+m[r][c+1]+m[r+1][c]+m[r+1][c+1]; if(s===0||s===4) p+=3; }
+    const pat=[1,0,1,1,1,0,1,0,0,0,0];
+    const look=(get)=>{ for(let i=0;i<n;i++) for(let j=0;j+10<n;j++){
+      let ok=true; for(let k=0;k<11;k++) if(get(i,j+k)!==pat[k]){ ok=false; break; } if(ok) p+=40; } };
+    look((i,j)=>m[i][j]); look((i,j)=>m[j][i]);
+    let dark=0; m.forEach(r=>r.forEach(v=>dark+=v));
+    p+=Math.floor(Math.abs(dark*100/(n*n)-50)/5)*10;
+    return p;
+  }
+
+  function make(text){
+    const {v,cw}=bits(text), data=interleave(v,cw), base=build(v,data), n=base.length;
+    let best=null;
+    for(let mask=0;mask<8;mask++){
+      const m=base.map(r=>r.slice());
+      for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(base[r][c]!==2&&!isFunc(base,r,c,v)&&MASKS[mask](r,c)) m[r][c]^=1;
+      const f=fmtBits(mask);
+      for(let i=0;i<15;i++){
+        const bit=(f>>i)&1;
+        if(i<6) m[i][8]=bit; else if(i===6) m[7][8]=bit; else if(i===7) m[8][8]=bit;
+        else if(i===8) m[8][7]=bit; else m[8][14-i]=bit;
+        if(i<8) m[8][n-1-i]=bit; else m[n-15+i][8]=bit;
+      }
+      m[n-8][8]=1;
+      if(v>=7){ const vb=verBits(v);
+        for(let i=0;i<18;i++){ const bit=(vb>>i)&1; const r=Math.floor(i/3), c=i%3;
+          m[n-11+c][r]=bit; m[r][n-11+c]=bit; } }
+      const p=penalty(m);
+      if(!best||p<best.p) best={p,m};
+    }
+    return best.m;
+  }
+  // function modules = finders, timing, alignment, dark module, reserved areas
+  function isFunc(base,r,c,v){
+    const n=base.length;
+    if(r===6||c===6) return true;
+    if(r<9&&c<9) return true;
+    if(r<9&&c>=n-8) return true;
+    if(r>=n-8&&c<9) return true;
+    for(const ar of ALIGN[v]) for(const ac of ALIGN[v]){
+      if((ar<9&&ac<9)||(ar<9&&ac>n-10)||(ar>n-10&&ac<9)) continue;
+      if(Math.abs(r-ar)<=2&&Math.abs(c-ac)<=2) return true; }
+    if(v>=7&&((r<6&&c>=n-11&&c<n-8)||(c<6&&r>=n-11&&r<n-8))) return true;
+    return false;
+  }
+
+  function draw(canvas,text,px=6,quiet=4){
+    const m=make(text), n=m.length, size=(n+quiet*2)*px;
+    canvas.width=canvas.height=size;
+    const x=canvas.getContext('2d');
+    x.fillStyle='#fff'; x.fillRect(0,0,size,size);
+    x.fillStyle='#000';
+    for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(m[r][c]) x.fillRect((c+quiet)*px,(r+quiet)*px,px,px);
+    return canvas;
+  }
+  return {make,draw};
+})();
+
+/* =====================================================================
+   WIRELESS SCREEN SHARING — عرض شاشة الجهاز على أجهزة ثانية،
+   واستقبال شاشة جهاز ثاني على هذا الجهاز (كلها من المتصفح، بدون تطبيق).
+   البث المباشر H.264 بـ ٣٠ إطار/ثانية + AirPlay للآيفون والآيباد.
+   ===================================================================== */
+ICONS.cast='<path d="M2 16.1A5 5 0 0 1 5.9 20M2 12.05A9 9 0 0 1 9.95 20M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><circle cx="2" cy="20" r="1" fill="currentColor"/>';
+ICONS.screenIn='<rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/><path d="M12 7v6M9 10l3 3 3-3"/>';
+ICONS.qr='<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 14h2M14 19h3M19 18v3h2"/>';
+ICONS.apple='<path d="M12 6c0-2 1.5-3.5 3.5-3.6C15.7 4.4 14.2 6 12 6Z"/><path d="M17.5 12.5c0-2 1.3-3 1.4-3.1-.8-1.1-2-1.3-2.5-1.3-1.1-.1-2.1.6-2.7.6-.6 0-1.4-.6-2.4-.6-1.8 0-3.7 1.5-3.7 4.3 0 1.7.6 3.5 1.5 4.7.7 1 1.4 1.8 2.4 1.8s1.3-.6 2.4-.6 1.4.6 2.4.6 1.7-.9 2.4-1.9c.5-.7.8-1.4 1-1.8-1.6-.7-2.2-2.2-2.2-2.7Z"/>';
+const Cast={
+  st:null, iv:0, full:false, fullIv:0, qrUrl:'', sig:'',
+  async poll(){
+    if(!(window.Native&&Native.on)){ this.st={on:false,demo:true}; this.render(); return; }
+    try{ this.st=await API.get('/api/share'); }catch(e){ this.st={on:false,err:errMsg(e)}; }
+    this.render();
+  },
+  async toggle(on){
+    if(!(window.Native&&Native.on)){ toast('العرض اللاسلكي يشتغل على الجهاز الحقيقي فقط',false); return; }
+    try{ this.st=await API.post('/api/share',{on}); this.render(); toast(on?'العرض اللاسلكي شغال':'تم إيقاف العرض اللاسلكي'); }
+    catch(e){ toast(errMsg(e),false); }
+  },
+  async airplay(on){
+    if(!(window.Native&&Native.on)){ toast('يشتغل على الجهاز الحقيقي فقط',false); return; }
+    try{ this.st=await API.post('/api/share',{airplay:on}); this.render();
+      toast(on?'صار الجهاز يظهر باسم Alharthia بقائمة «عكس الشاشة»':'تم الإيقاف'); }
+    catch(e){ toast(errMsg(e),false); }
+  },
+  drawQR(url){
+    const cv=$('#castQR'); if(!cv||!url) return;
+    if(this.qrUrl===url&&cv.dataset.done) return;
+    try{ QR.draw(cv,url,6,3); this.qrUrl=url; cv.dataset.done='1'; }
+    catch(e){ cv.remove(); }
+  },
+  render(force){
+    const m=$('#castMain'); if(!m) return;
+    const s=this.st||{};
+    const sig=JSON.stringify([s.on,s.url,s.viewers,s.incoming,s.from,s.tool,s.video,s.videoTool,s.videoErr,s.airplay]);
+    if(!force&&sig===this.sig){ if(s.incoming) this.tickImg($('#castImg')); return; }
+    this.sig=sig;
+    const on=!!s.on, url=s.url||'', ap=s.airplay||'missing';
+    m.innerHTML=`<div class="app-head"><h1 class="h1">العرض اللاسلكي</h1><span class="grow"></span>
+        ${on?`<span class="cast-live">${icon('cast')}<span>شغّال</span>${s.viewers?` · ${nf(s.viewers)} <span>مشاهد</span>`:''}</span>`:''}</div>
+
+      <div class="card"><h3>${icon('cast')}اعرض شاشة هذا الجهاز على شاشة ثانية
+        ${on&&s.video?`<span class="cast-tag ok">بث مباشر ٣٠ إطار/ثانية</span>`:on?`<span class="cast-tag">صور متتابعة</span>`:''}</h3>
+        <div class="row"><label for="castOn">تشغيل العرض اللاسلكي<span class="hint">أي جهاز على نفس شبكة الـ Wi-Fi يشوف الشاشة من المتصفح — آيفون، آيباد، أندرويد، أو كمبيوتر</span></label>
+          <label class="sw"><input type="checkbox" id="castOn" ${on?'checked':''}><span></span></label></div>
+        ${on?`<div class="cast-url"><span class="hint">افتح هذا العنوان بمتصفح الجهاز الثاني:</span><b dir="ltr">${esc(url)}</b>
+            <div class="cast-qr"><canvas id="castQR"></canvas>
+              <div class="qr-tip">${icon('qr')} صوّب كاميرا الهاتف على هذا الرمز — يفتح الشاشة مباشرة بدون ما تكتب العنوان.</div></div>
+            <div class="btns" style="margin-top:12px"><button class="btn sm" data-cast="copy">${icon('copy')}نسخ العنوان</button>
+            <span class="hint">أو اكتب <b dir="ltr">${esc(s.ip||'')}:${s.port||0}</b> بالمتصفح</span></div></div>`
+          :`<p class="hint">من تشغّله يطلع لك عنوان ورمز QR تفتحه بالجهاز الثاني (لابتوب، شاشة ذكية، أو هاتف).</p>`}
+        ${s.tool===false?`<p class="hint" style="color:var(--warn)">${icon('info')} أداة التقاط الشاشة (grim) غير مثبتة — نفّذ: sudo apt install grim</p>`:''}
+        ${on&&s.videoTool===false?`<p class="hint" style="color:var(--warn)">${icon('info')} البث المباشر يحتاج wf-recorder و ffmpeg — نفّذ: sudo apt install wf-recorder ffmpeg (بدونها يشتغل بصور متتابعة)</p>`:''}
+        ${on&&s.videoTool&&!s.video&&s.videoErr?`<p class="hint" style="color:var(--warn)">${icon('info')} ${esc(s.videoErr)}</p>`:''}
+      </div>
+
+      <div class="card"><h3>${icon('screenIn')}استقبل شاشة جهاز ثاني على هذا الجهاز</h3>
+        ${on?`<ol class="cast-steps"><li>افتح نفس العنوان أعلاه بمتصفح الكمبيوتر (Chrome أو Edge).</li>
+            <li>اضغط «شارك شاشتك مع الجهاز».</li><li>اختار الشاشة أو النافذة اللي تريد تعرضها.</li></ol>`
+          :`<p class="hint">شغّل العرض اللاسلكي أولاً حتى تكدر تستقبل.</p>`}
+        <div class="row"><label for="castAir">${icon('apple')} استقبال من آيفون / آيباد (AirPlay)
+          <span class="hint">من تشغّله، افتح «مركز التحكم» بالآيفون ← «عكس الشاشة» ← اختر <b dir="ltr">Alharthia</b></span></label>
+          <label class="sw"><input type="checkbox" id="castAir" ${ap==='on'?'checked':''} ${ap==='missing'?'disabled':''}><span></span></label></div>
+        ${ap==='missing'?`<p class="hint" style="color:var(--warn)">${icon('info')} غير مثبت — نفّذ: sudo apt install uxplay avahi-daemon</p>`:''}
+        <p class="hint">${icon('info')} أجهزة أندرويد تشارك شاشتها عن طريق نفس الرابط من متصفح كروم.</p>
+        ${s.incoming?`<div class="cast-in"><div class="hint">يعرض الآن: <b>${esc(s.from||'جهاز')}</b></div>
+            <img id="castImg" alt="">
+            <div class="btns" style="margin-top:10px"><button class="btn primary" data-cast="full">${icon('fit')}ملء الشاشة</button></div></div>`
+          :on?`<p class="hint">${icon('info')} ماكو جهاز يشارك شاشته هسه.</p>`:''}
+      </div>
+      ${(window.Native&&Native.on)?'':'<div class="card"><p class="hint">هذي معاينة — العرض اللاسلكي يشتغل على الراسبيري.</p></div>'}`;
+    const t=$('#castOn'); if(t) t.onchange=()=>this.toggle(t.checked);
+    const a=$('#castAir'); if(a) a.onchange=()=>this.airplay(a.checked);
+    if(on&&url) this.drawQR(url);
+    if(s.incoming) this.tickImg($('#castImg'));
+  },
+  tickImg(img){ if(!img) return; img.src='/api/share/incoming.jpg?t='+Date.now()+'&t2='+API.tok; },
+  openFull(){
+    this.full=true;
+    const el=$('#castFull'); el.hidden=false;
+    el.innerHTML=`<img alt=""><button class="btn ghost" data-cast="exitFull">${icon('x')}خروج</button>`;
+    const img=el.querySelector('img');
+    clearInterval(this.fullIv);
+    this.fullIv=setInterval(()=>{ img.src='/api/share/incoming.jpg?t='+Date.now(); },300);
+  },
+  closeFull(){ this.full=false; clearInterval(this.fullIv); $('#castFull').hidden=true; },
+  init(){
+    document.addEventListener('click',async e=>{
+      const b=e.target.closest('[data-cast]'); if(!b) return;
+      const a=b.dataset.cast;
+      if(a==='copy'){ try{ await navigator.clipboard.writeText(this.st.url); toast('تم نسخ العنوان'); }catch(er){ toast('انسخه يدوياً',false); } }
+      if(a==='full') this.openFull();
+      if(a==='exitFull') this.closeFull();
+    });
+  }
+};
+onShow.cast=()=>{ Cast.sig=''; Cast.poll(); clearInterval(Cast.iv); Cast.iv=setInterval(()=>{ if(current==='cast') Cast.poll(); },2500); };
+onHide.cast=()=>{ clearInterval(Cast.iv); };
+
+/* =====================================================================
+   INTERFACE LANGUAGE — Arabic (default) / English
+   الترجمة تنطبق على النصوص الظاهرة، وأي نص ما موجود بالقاموس يبقى بالعربي.
+   ===================================================================== */
+const LANG_EN={
+ 'الرئيسية':'Home','التطبيقات':'Apps','السبورة':'Whiteboard','قارئ PDF':'PDF reader','مستكشف الملفات':'Files',
+ 'الملفات':'Files','الإعدادات':'Settings','متجر التطبيقات':'App store','الحضور والغياب':'Attendance','المؤقت':'Timer',
+ 'مشغل الوسائط':'Media player','الطرفية':'Terminal','العرض اللاسلكي':'Wireless display','Chromium الكامل':'Full Chromium',
+ 'المستندات':'Documents','الصور':'Pictures','الفيديو':'Videos','التنزيلات':'Downloads','السبورات المحفوظة':'Saved boards',
+ 'المستلمة عبر البلوتوث':'Received over Bluetooth','الذاكرة الداخلية':'Internal storage','الأجهزة الخارجية':'External devices',
+ 'فلاشة':'USB drive','الفلاشة':'USB drive','ماكو فلاشة موصولة':'No USB drive connected','نظام الملفات':'File system',
+ 'حذف':'Delete','إلغاء':'Cancel','تطبيق':'Apply','حفظ':'Save','فتح':'Open','فتح الملف':'Open file','فتح المجلد':'Open folder',
+ 'فتح ملف':'Open file','بحث':'Search','تحديث':'Refresh','إعادة تسمية':'Rename','مجلد جديد':'New folder','نسخ':'Copy',
+ 'إخراج':'Eject','رجوع':'Back','إغلاق':'Close','اختيار':'Choose','تحديد':'Select','إزالة':'Remove','تثبيت':'Install',
+ 'ماكو نتائج':'No results','المجلد فارغ':'Folder is empty','عنصر':'items','متوفرة من':'free of','تم النسخ':'Copied',
+ 'تم':'Done','معاينة':'Preview','هذه معاينة':'This is a preview','المس الشاشة للرجوع':'Touch the screen to go back',
+ 'الاتصالات':'Connections','البلوتوث':'Bluetooth','البلوتوث مطفأ':'Bluetooth is off','متصل':'Connected','اتصال':'Connect',
+ 'قطع الاتصال':'Disconnect','مطفأ':'Off','تشغيل':'On','اقتران':'Pair','أجهزة قريبة':'Nearby devices','الأجهزة المقترنة':'Paired devices',
+ 'اسم الجهاز':'Device name','مرئي للأجهزة القريبة':'Visible to nearby devices','استلام الملفات':'Receive files',
+ 'التخزين':'Storage','السعة':'Capacity','المستخدمة':'Used','المتوفرة':'Free','الحالة':'State','الجهاز':'Device',
+ 'تطبيقات النظام':'System apps','البرامج المثبتة من المتجر':'Apps installed from the store','الإصدار':'Version',
+ 'الواجهة والألوان':'Look & colours','صور الواجهة':'Interface images','الهوية والشعار':'Identity & logo',
+ 'الشاشة والعرض':'Screen & display','اللغة والوقت':'Language & time','سهولة الاستخدام':'Accessibility',
+ 'الأمان والقفل':'Security & lock','التشغيل والطاقة':'Power','النسخ الاحتياطي والتحديث':'Backup & update','حول النظام':'About',
+ 'الصوت والسطوع':'Sound & brightness','الصوت والشاشة':'Sound & screen','جهاز إخراج الصوت':'Audio output device',
+ 'الصوت':'Volume','السطوع':'Brightness','قفل الشاشة بعد عدم الاستخدام':'Lock the screen after','أبداً':'Never',
+ 'الوضع':'Mode','ليلي':'Dark','صباحي':'Light','تلقائي':'Automatic','لون التمييز':'Accent colour','الواجهة':'Interface',
+ 'نظام ٢٤ ساعة':'24-hour clock','الأرقام العربية':'Arabic-Indic digits','اسم الصف':'Class name','اسم المدرسة':'School name',
+ 'إعادة ضبط المصنع':'Factory reset','إعادة الضبط':'Reset','إعادة التشغيل':'Restart','إيقاف التشغيل':'Shut down',
+ 'خيارات التشغيل':'Power options','لغة الواجهة':'Interface language','العربية':'Arabic','English':'English',
+ 'كيبورد الشاشة':'On-screen keyboard','حجم الكيبورد':'Keyboard size','صغير':'Small','متوسط':'Medium','كبير':'Large',
+ 'متى يطلع الكيبورد':'When the keyboard appears','القائمة الجانبية':'Side menu','اتجاه القائمة':'Menu direction',
+ 'عمودية':'Vertical','أفقية':'Horizontal','رجّعها لمكانها':'Reset its place',
+ 'تراجع':'Undo','إعادة':'Redo','مسح':'Clear','صفحة جديدة':'New page','الصفحات':'Pages','صفحة':'Page','السابقة':'Previous',
+ 'التالية':'Next','ملء الشاشة':'Full screen','إخفاء الأدوات':'Hide tools','إظهار الأدوات':'Show tools','نوع السبورة':'Board type',
+ 'قلم':'Pen','ممحاة':'Eraser','ممحاة عادية':'Normal eraser','ممحاة الأشكال':'Object eraser','نص':'Text','الأشكال':'Shapes',
+ 'أدوات هندسية':'Geometry tools','خط مستقيم':'Straight line','مساعد الخط المستقيم':'Straight-line assist','السُمك':'Thickness',
+ 'التقاط لون':'Pick colour','كل الألوان':'All colours','لون مخصص':'Custom colour','لون':'Colour','تلوين':'Colour',
+ 'تكرار':'Duplicate','للأمام':'Bring forward','صورة':'Image','مسطرة ٣٠ سم':'30 cm ruler','منقلة':'Protractor','فرجال':'Compass',
+ 'محاور إحداثية':'Coordinate axes','خط':'Line','نصف دائرة':'Half circle','دائرة':'Circle','مربع / مستطيل':'Square / rectangle',
+ 'مستطيل':'Rectangle','مثلث':'Triangle','تعبئة الشكل':'Fill shape','حذف الصفحة':'Delete page',
+ 'حاضر':'Present','غائب':'Absent','متأخر':'Late','مجاز':'Excused','الاسم':'Name','اسم الطالب':'Student name',
+ 'لقطة شاشة':'Screenshot','تم حفظ لقطة الشاشة':'Screenshot saved','فتح الصورة':'Open image',
+ 'الكتابة فوق الشاشة':'Draw over the screen','الخروج من وضع الكتابة':'Leave drawing mode','اسحب لتحريك القائمة':'Drag to move the menu',
+ 'إغلاق القائمة':'Close menu','مسح كل الكتابة':'Clear all drawing','حفظ الصورة الحالية PNG':'Save this screen as PNG',
+ 'تم استلام الملف':'File received','جاري استلام ملف':'Receiving a file','فشل استلام الملف':'File transfer failed','من':'From',
+ 'اعرض شاشة هذا الجهاز على شاشة ثانية':'Show this screen on another display',
+ 'استقبل شاشة جهاز ثاني على هذا الجهاز':'Receive another device’s screen here',
+ 'تشغيل العرض اللاسلكي':'Turn on wireless display','نسخ العنوان':'Copy the address','شغّال':'Live','مشاهد':'viewers',
+ 'استقبال من آيفون / آيباد (AirPlay)':'Receive from iPhone / iPad (AirPlay)',
+ 'أي جهاز على نفس شبكة الـ Wi-Fi يشوف الشاشة من المتصفح — آيفون، آيباد، أندرويد، أو كمبيوتر':'Any device on the same Wi-Fi can watch this screen from its browser — iPhone, iPad, Android or computer',
+ 'من تشغّله يطلع لك عنوان ورمز QR تفتحه بالجهاز الثاني (لابتوب، شاشة ذكية، أو هاتف).':'Turn it on and you get an address and a QR code to open on the other device (laptop, smart display or phone).',
+ 'صوّب كاميرا الهاتف على هذا الرمز — يفتح الشاشة مباشرة بدون ما تكتب العنوان.':'Point the phone camera at this code — it opens the screen without typing the address.',
+ 'من تشغّله، افتح «مركز التحكم» بالآيفون ← «عكس الشاشة» ← اختر':'Turn it on, then open Control Centre on the iPhone → Screen Mirroring → choose',
+ 'افتح نفس العنوان أعلاه بمتصفح الكمبيوتر (Chrome أو Edge).':'Open the same address above in a computer browser (Chrome or Edge).',
+ 'اضغط «شارك شاشتك مع الجهاز».':'Press “Share your screen with the device”.',
+ 'اختار الشاشة أو النافذة اللي تريد تعرضها.':'Pick the screen or window you want to show.',
+ 'شغّل العرض اللاسلكي أولاً حتى تكدر تستقبل.':'Turn on the wireless display first so you can receive.',
+ 'هذي معاينة — العرض اللاسلكي يشتغل على الراسبيري.':'This is a preview — wireless display runs on the Raspberry Pi.',
+ 'أو اكتب':'Or type','بالمتصفح':'in the browser','مشاهد':'viewers',
+ 'بث مباشر ٣٠ إطار/ثانية':'Live · 30 fps','صور متتابعة':'Still frames',
+ 'افتح هذا العنوان بمتصفح الجهاز الثاني:':'Open this address in the other device’s browser:',
+ 'أجهزة أندرويد تشارك شاشتها عن طريق نفس الرابط من متصفح كروم.':'Android devices share their screen through the same link in Chrome.',
+ 'ماكو جهاز يشارك شاشته هسه.':'No device is sharing its screen right now.',
+ 'خروج':'Exit','جاري البحث':'Searching','جاري الفتح':'Opening','تعذر فتح الملف':'Could not open the file','تعذر الحفظ':'Could not save'
+};
+const Lang={
+  on:false, obs:null,
+  apply(first){
+    const en=S.lang==='en';
+    if(en===this.on&&!first) return;
+    if(!en){ if(this.on) location.reload(); return; }
+    this.on=true;
+    const r=document.documentElement;
+    r.lang='en'; r.dir='ltr'; r.classList.add('lang-en');
+    S.ar=false;
+    this.walk(document.body);
+    this.watch();
+  },
+  tr(t){
+    const k=t.trim(); if(!k||k.length>80) return null;
+    if(LANG_EN[k]) return t.replace(k,LANG_EN[k]);
+    const dash=k.match(/^(.+?)\s*[—–-]\s*(.+)$/);
+    if(dash&&LANG_EN[dash[1].trim()]) return t.replace(k,LANG_EN[dash[1].trim()]+' — '+(LANG_EN[dash[2].trim()]||dash[2].trim()));
+    const par=k.match(/^(.+?)\s*\(([^)]*)\)$/);
+    if(par&&LANG_EN[par[1].trim()]) return t.replace(k,LANG_EN[par[1].trim()]+' ('+par[2]+')');
+    return null;
+  },
+  walk(root){
+    if(!root) return;
+    const it=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);
+    const jobs=[];
+    while(it.nextNode()){ const n=it.currentNode; if(!/[؀-ۿ]/.test(n.nodeValue)) continue; const v=this.tr(n.nodeValue); if(v) jobs.push([n,v]); }
+    jobs.forEach(([n,v])=>n.nodeValue=v);
+    const els=root.nodeType===1?[root,...root.querySelectorAll('[placeholder],[title],[aria-label]')]:[];
+    for(const el of els){
+      for(const a of ['placeholder','title','aria-label']){
+        const v=el.getAttribute&&el.getAttribute(a); if(!v||!/[؀-ۿ]/.test(v)) continue;
+        const t=this.tr(v); if(t) el.setAttribute(a,t);
+      }
+    }
+  },
+  watch(){
+    if(this.obs) return;
+    let queue=[], t=0;
+    this.obs=new MutationObserver(ms=>{
+      for(const m of ms){ m.addedNodes.forEach(n=>queue.push(n)); if(m.type==='characterData') queue.push(m.target); }
+      clearTimeout(t); t=setTimeout(()=>{ const q=queue; queue=[]; q.forEach(n=>this.walk(n.nodeType===3?n.parentNode:n)); },60);
+    });
+    this.obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+  }
+};
+
+/* =====================================================================
    NATIVE MODE — connects the interface to the real Raspberry Pi
    (only active when served by alharthia_server.py)
    ===================================================================== */
@@ -4575,6 +5278,7 @@ const Native={
     setInterval(()=>{ if(current==='settings') this.pollBt(); },6000);
     setInterval(()=>this.pollBt(),45000);
     setInterval(()=>this.pollReceived(),4000);
+    setInterval(()=>BtXfer.poll(),800);
     this.pushKbd();
     { const baseSave=save; let kt=0; save=function(m){ baseSave(m); clearTimeout(kt); kt=setTimeout(()=>Native.pushKbd(),600); }; }
     API.get('/api/volume').then(v=>{ if(v.value!=null){ S.vol=v.value; syncSettingsUI(); } }).catch(()=>{});
@@ -4638,8 +5342,8 @@ const Native={
     const baseSys=sysMessage;
     sysMessage=function(txt,after,cb){
       baseSys(txt,after,cb);
-      if(/إيقاف التشغيل|انتهى الدوام/.test(txt)) setTimeout(()=>API.post('/api/power',{action:'off'}).catch(e=>toast(errMsg(e),false)),800);
-      else if(/إعادة التشغيل/.test(txt)) setTimeout(()=>API.post('/api/power',{action:'reboot'}).catch(e=>toast(errMsg(e),false)),800);
+      if(/Shutting down/i.test(txt)) setTimeout(()=>API.post('/api/power',{action:'off'}).catch(e=>toast(errMsg(e),false)),800);
+      else if(/Restarting/i.test(txt)) setTimeout(()=>API.post('/api/power',{action:'reboot'}).catch(e=>toast(errMsg(e),false)),800);
     };
     // status bar
     wifiBars=function(){ const w=self.wifi; if(!w||!w.enabled||!w.current) return 0; const n=w.nets.find(x=>x.active); const s=n?n.signal:60; return s>75?4:s>50?3:s>25?2:1; };
@@ -4671,6 +5375,7 @@ const Native={
     $('#btBody').addEventListener('change',e=>self.onBtChange(e));
     BT.incoming=()=>toast(`من الهاتف: شارك الملف بالبلوتوث واختر «${S.btName}»`);
     BT.showNative=node=>{
+      if(BtXfer.shown.has(node.path)) return;
       const el=$('#btReq'); el.hidden=false; beep(2,990);
       el.innerHTML=`<div class="hd"><span class="ic" style="background:var(--ok)">${icon('bluetooth')}</span><div><b>تم استلام ملف بالبلوتوث</b><div class="hint">محفوظ في «المستلمة عبر البلوتوث»</div></div></div><div class="fn">${esc(node.name)}</div>
         <div class="btns" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" data-nbr="folder">${icon('folder')}فتح المجلد</button><button class="btn primary" data-nbr="open">فتح الملف</button></div>`;
@@ -4779,6 +5484,45 @@ const Native={
   }
 };
 window.Native=Native;
+
+/* ---------------- Bluetooth transfer card (bottom-left, like the phone) ---------------- */
+const BtXfer={
+  shown:new Set(), seen:new Map(), active:null, hideT:0, t0:Date.now()/1000,
+  async poll(){
+    if(!(window.Native&&Native.on)) return;
+    let r; try{ r=await API.get('/api/bt/transfers'); }catch(e){ return; }
+    const items=(r.items||[]).filter(t=>t.started>=this.t0-2);
+    const live=items.filter(t=>t.state==='receiving').sort((a,b)=>b.started-a.started);
+    if(live.length){ this.active=live[0].id; this.render(live[0],live.length-1); return; }
+    for(const t of items){
+      const prev=this.seen.get(t.id); if(prev===t.state) continue;
+      this.seen.set(t.id,t.state);
+      if(t.state==='done'){ if(t.path) this.shown.add(t.path); this.render(t,0); beep(2,990); }
+      else if(t.state==='failed'&&this.active===t.id) this.render(t,0);
+    }
+  },
+  render(t,more){
+    const el=$('#btReq'); el.hidden=false; el.classList.add('xfer');
+    const pct=t.size?Math.min(100,Math.round(t.got/t.size*100)):0;
+    const secs=Math.max(.5,(t.t||Date.now()/1000)-t.started), speed=t.got/secs;
+    const done=t.state==='done', fail=t.state==='failed';
+    const color=done?'var(--ok)':fail?'var(--danger)':'#2563eb';
+    el.innerHTML=`<div class="hd"><span class="ic${!done&&!fail?' pulse':''}" style="background:${color}">${icon(done?'check':fail?'x':'bluetooth')}</span>
+        <div class="grow"><b>${done?'تم استلام الملف':fail?'فشل استلام الملف':'جاري استلام ملف'}</b><div class="hint">${fail?'انقطع الاتصال مع الجهاز':'من: '+esc(t.from||'جهاز بلوتوث')}${more>0?` · و${nf(more)} ملف ثاني`:''}</div></div>
+        <button class="icon-btn sm" data-xf="hide" title="إخفاء">${icon('x')}</button></div>
+      <div class="fn">${esc(t.name)}</div>
+      ${done?`<div class="hint">${fmtSize(t.got)} · محفوظ في «المستلمة عبر البلوتوث»</div>
+        <div class="btns" style="margin-top:14px;justify-content:flex-end"><button class="btn ghost" data-xf="folder">${icon('folder')}فتح المجلد</button><button class="btn primary" data-xf="open">فتح الملف</button></div>`
+      :fail?'':`<div class="meter"><i style="width:${t.size?pct:30}%"></i></div>
+        <div class="xf-row"><span>${t.size?nf(pct)+'٪':''}</span><span>${fmtSize(t.got)}${t.size?' من '+fmtSize(t.size):''}</span><span>${fmtSize(speed)}/ث</span></div>`}`;
+    el.onclick=e=>{ const b=e.target.closest('[data-xf]'); if(!b) return; const a=b.dataset.xf; el.hidden=true;
+      if(a==='folder'){ go('files'); Files.open('internal','bt'); }
+      if(a==='open'&&t.path) openFile(nodeOf({path:t.path,name:t.path.split('/').pop(),size:t.got,mtime:Date.now()})); };
+    clearTimeout(this.hideT);
+    if(done||fail) this.hideT=setTimeout(()=>{ el.hidden=true; el.classList.remove('xfer'); },done?15000:8000);
+  }
+};
+window.BtXfer=BtXfer;
 function nodeOf(f){ return {native:true,id:f.path,path:f.path,name:f.name,type:f.dir?'dir':extOf(f.name),size:f.size,mtime:f.mtime,count:f.count}; }
 async function nativeOpen(node){
   const t=node.type;
@@ -5473,17 +6217,26 @@ function renderAbout(){
    ===================================================================== */
 function lockNow(){ layoutAll(); $('#lock').hidden=false; }
 $('#lock').onclick=async()=>{ if(S.pin&&!await pinPad('أدخل رمز القفل')) return; $('#lock').hidden=true; lastAct=Date.now(); };
+/* شاشة الإطفاء / إعادة التشغيل: الشعار + نص إنكليزي، وتبقى ظاهرة لحد ما ينطفي الجهاز.
+   after==='hold' يعني لا تنزل الشاشة أبداً (بالمعاينة فقط تنسد باللمس، بدون أي نص). */
 function sysMessage(txt,after,cb){
   const m=$('#sysMsg'); $('#sysTxt').textContent=txt; m.hidden=false; m.querySelector('.spin').hidden=false; m.onclick=null;
-  setTimeout(()=>{ if(cb){ cb(); return; } if(after==null){ m.hidden=true; return; } m.querySelector('.spin').hidden=true; $('#sysTxt').textContent=after; m.onclick=()=>{ m.hidden=true; m.onclick=null; }; },1800);
+  m.classList.toggle('power',after==='hold');
+  document.documentElement.classList.add('sysmsg');
+  const close=()=>{ m.hidden=true; m.onclick=null; m.classList.remove('power'); document.documentElement.classList.remove('sysmsg'); };
+  if(after==='hold'){
+    if(!(window.Native&&Native.on)) m.onclick=close;
+    return;
+  }
+  setTimeout(()=>{ if(cb){ cb(); return; } close(); },1800);
 }
 $('#tbKbd').onclick=()=>Keyboard.toggleEnabled();
 $('#tbPower').onclick=()=>modal({title:'خيارات التشغيل',iconName:'power',body:`<div class="power-grid">
     <button data-pw="lock">${icon('lock')}قفل الشاشة</button><button data-pw="restart">${icon('restart')}إعادة التشغيل</button><button data-pw="off" class="red">${icon('power')}إيقاف التشغيل</button></div>`,
   actions:[{label:'إلغاء',val:null,cls:'ghost'}],
   onOpen:(ov,done)=>ov.addEventListener('click',e=>{ const b=e.target.closest('[data-pw]'); if(!b) return; done(null); const a=b.dataset.pw;
-    if(a==='lock') lockNow(); if(a==='restart'){ Board.persist(); sysMessage('جاري إعادة التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
-    if(a==='off'){ Board.persist(); sysMessage('جاري حفظ العمل وإيقاف التشغيل…','هذه معاينة — المس الشاشة للرجوع'); } })});
+    if(a==='lock') lockNow(); if(a==='restart'){ Board.persist(); sysMessage('Restarting…','hold'); }
+    if(a==='off'){ Board.persist(); sysMessage('Shutting down…','hold'); } })});
 let lastAct=Date.now();
 ['pointerdown','keydown','wheel'].forEach(t=>addEventListener(t,()=>{lastAct=Date.now();},{passive:true,capture:true}));
 setInterval(()=>{ const mins=+S.sleep; if(!mins||!$('#lock').hidden||Timer.running()) return; if(Date.now()-lastAct>mins*60e3) lockNow(); },15e3);
@@ -5539,7 +6292,7 @@ function tick(){
   Extra.init();
   Attend.init();
   renderDock();
-  Keyboard.init(); Media.init(); AudioOut.init(); Term.init();
+  Keyboard.init(); Media.init(); AudioOut.init(); Term.init(); Side.init(); Cast.init(); Lang.apply(true);
   Native.init();
   const m=$('#sysMsg'); $('#sysTxt').textContent='جاري التشغيل…'; m.hidden=false; if(S.bootSound) setTimeout(()=>beep(1,523),200);
   setTimeout(()=>{ m.hidden=true; if(S.startApp&&S.startApp!=='home') go(S.startApp); if(S.lockOnStart) lockNow(); },700);

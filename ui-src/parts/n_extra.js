@@ -137,7 +137,7 @@ const Extra={
     time(){
       return `<h1 class="h1">اللغة والوقت</h1><p class="sub">لغة النظام، المنطقة الزمنية، وشكل التاريخ والأرقام.</p>
       <div class="card"><h3>${icon('globe')}اللغة</h3>
-        ${sel('lang','لغة الواجهة',[['ar','العربية'],['en','English (قريباً)'],['ku','کوردی (قريباً)']])}
+        ${sel('lang','لغة الواجهة',[['ar','العربية'],['en','English'],['ku','کوردی (قريباً)']])}
         ${sw('ar','الأرقام العربية (١٢٣)')}
         <div class="row"><span class="lbl">لغات الكيبورد<span class="hint">تتبدل بزر 🌐 أو من الشريط فوق الكيبورد — نفس اللغات تنضاف لكيبورد برامج النظام</span></span><div class="chips">${Object.entries(OSK_LANGS).map(([l,L])=>`<button class="chip${(S.kbdLangs||[]).includes(l)?' on':''}" data-kl="${l}">${L.n}</button>`).join('')}</div></div>
         <div class="row"><label>جرّب الكيبورد</label><input class="field" type="text" placeholder="اكتب هنا…"></div>
@@ -161,6 +161,11 @@ const Extra={
       <div class="card"><h3>${icon('cursor')}المؤشر والإدخال</h3>
         ${sw('bigCursor','مؤشر ماوس كبير')}
         ${sw('hideCursor','إخفاء المؤشر','مناسب لشاشات اللمس')}
+      </div>
+      <div class="card"><h3>${icon('grip')}القائمة الجانبية</h3>
+        ${sel('sideDir','اتجاه القائمة',[['v','عمودية'],['h','أفقية']])}
+        <div class="row"><span class="lbl">مكان القائمة<span class="hint">تكدر تسحبها من زر النقاط لأي مكان بالشاشة</span></span><button class="btn sm" data-x="sideReset">${icon('restart')}رجّعها لمكانها</button></div>
+        <p class="hint">السهم الصغير على الجانبين يفتح القائمة بكل الصفحات.</p>
       </div>
       <div class="card"><h3>${icon('keyboard')}كيبورد الشاشة</h3>
         ${sel('oskMode','متى يطلع الكيبورد',[['auto','تلقائياً عند لمس خانة الكتابة'],['always','دائماً (حتى بالماوس)'],['off','مطفأ']])}
@@ -229,8 +234,12 @@ const Extra={
     if(key==='slideshow'||key==='slideMin') this.startSlides();
     if(key==='autoTime') this.renderSec('time');
     if(key==='orient'||key==='res') toast('يطبَّق على الشاشة الحقيقية بعد التأكيد');
-    if(key==='lang'&&S.lang!=='ar'){ toast('هاي اللغة راح تتوفر بالإصدار القادم',false); S.lang='ar'; this.renderSec('time'); }
+    if(key==='lang'){
+      if(S.lang==='ku'){ toast('الكردية راح تتوفر بالإصدار القادم',false); S.lang='ar'; this.renderSec('time'); }
+      else { save(); Lang.apply(); if(S.lang==='ar') return; this.renderSec('time'); toast('تم تبديل لغة الواجهة'); }
+    }
     if(key==='oskSize'&&!Keyboard.el.hidden) Keyboard.show();
+    if(key==='sideDir'&&Side.open) Side.show(Side.side);
     if(/^osk|^kbd/.test(key)){ Keyboard.syncBtn(); if(key==='oskMode'&&S.oskMode==='off') Keyboard.hide(); if(window.Native&&Native.on) Native.pushKbd(); }
     applySystemPrefs(); layoutAll();
   },
@@ -264,11 +273,12 @@ const Extra={
       if(a==='lockNow') lockNow();
       if(a==='clearHist') toast('تم مسح السجل');
       if(a==='factory'){ if(await confirmBox('إعادة ضبط المصنع','راح تنحذف كل الإعدادات والسبورات والملفات والصور والبرامج المثبتة.','إعادة الضبط',true,'restart')){ try{ Object.keys(localStorage).filter(k=>k.startsWith('alharthia.')).forEach(k=>localStorage.removeItem(k)); }catch(_){} sysMessage('جاري إعادة ضبط النظام…',null,()=>location.reload()); } }
-      if(a==='restart'){ Board.persist(); sysMessage('جاري إعادة التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
-      if(a==='off'){ Board.persist(); sysMessage('جاري حفظ العمل وإيقاف التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
+      if(a==='restart'){ Board.persist(); sysMessage('Restarting…','hold'); }
+      if(a==='off'){ Board.persist(); sysMessage('Shutting down…','hold'); }
       if(a==='calib') this.calibrate();
       if(a==='export') this.exportFile();
       if(a==='import') $('#impFile').click();
+      if(a==='sideReset'){ S.sidePos=null; save('تم إرجاع القائمة لمكانها'); if(Side.open) Side.show(Side.side); }
       if(a==='resetSettings'){ if(await confirmBox('إرجاع الإعدادات','كل الإعدادات ترجع للأصل (الملفات والسبورات تبقى).','إرجاع',true,'restart')){ const keep={installed:S.installed}; Object.keys(S).forEach(k=>delete S[k]); Object.assign(S,structuredClone(DEF),keep); store.set('settings',S); location.reload(); } }
       if(a==='checkUpd'){ await Files.progress('جاري البحث عن تحديثات…',200*MB); toast('النظام محدَّث لآخر إصدار'); }
     });
@@ -291,7 +301,7 @@ const Extra={
       if(!S.offOn) return; const n=tzNow(), day=n.toDateString(), hm=pad(n.getHours())+':'+pad(n.getMinutes());
       const [h,mn]=S.offTime.split(':').map(Number); const w=new Date(n); w.setHours(h,mn-5,0,0); const whm=pad(w.getHours())+':'+pad(w.getMinutes());
       if(hm===whm&&warned!==day){ warned=day; toast('تنبيه: الجهاز راح يطفي بعد ٥ دقائق — احفظ عملك',false); beep(2,700); }
-      if(hm===S.offTime&&fired!==day){ fired=day; Board.persist(); sysMessage('انتهى الدوام — جاري إيقاف التشغيل التلقائي…','هذه معاينة — المس الشاشة للرجوع'); }
+      if(hm===S.offTime&&fired!==day){ fired=day; Board.persist(); sysMessage('Shutting down…','hold'); }
     },20e3);
     this.startSlides(); applySystemPrefs();
   },

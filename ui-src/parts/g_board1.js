@@ -93,6 +93,7 @@ function boxPoly(it,seg=48){
     case 'triangle': P=[[cx,y],[x+w,y+h],[x,y+h]]; break;
     case 'rtri': P=[[x,y],[x,y+h],[x+w,y+h]]; break;
     case 'diamond': P=[[cx,y],[x+w,cy],[cx,y+h],[x,cy]]; break;
+    case 'semi': { P=[]; const n=40; for(let i=0;i<=n;i++){ const a=Math.PI+i*Math.PI/n; P.push([cx+Math.cos(a)*w/2,y+h+Math.sin(a)*h]); } break; }
     case 'pentagon': P=regPoly(cx,cy+h*.05,w/2,h/2*1.05,5); break;
     case 'hexagon': P=regPoly(cx,cy,w/2,h/2,6,0); break;
     case 'star': P=regPoly(cx,cy+h*.06,w/2,h/2*1.06,5,-Math.PI/2,.45); break;

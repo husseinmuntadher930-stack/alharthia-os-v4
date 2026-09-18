@@ -254,9 +254,13 @@ html[data-theme=dark] .chip.on{color:#fff}
 #lock .l-class{font-size:min(6vh,56px);font-weight:700}
 #lock .l-hint{position:absolute;bottom:5vh;opacity:.7;display:flex;gap:8px;align-items:center;font-size:17px;animation:pulse 2s infinite}
 @keyframes pulse{50%{opacity:.35}}
-#sysMsg{position:fixed;inset:0;z-index:130;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
+#sysMsg{position:fixed;inset:0;z-index:200;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
 #sysMsg img{width:130px;border-radius:50%}
 #sysMsg .wm{font-size:28px;font-weight:700;direction:ltr}#sysMsg .wm b{color:var(--acc)}
+#sysMsg #sysTxt{direction:ltr;letter-spacing:.3px;opacity:.85}
+#sysMsg.power #sysTxt{font-size:24px;opacity:1}
+#sysMsg.power img{width:150px}
+html.sysmsg #sideWrap,html.sysmsg #osk,html.sysmsg #toast,html.sysmsg #qp{display:none!important}
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(128,128,128,.25);border-top-color:var(--acc);animation:rot .8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 

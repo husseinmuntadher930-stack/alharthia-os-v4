@@ -130,7 +130,7 @@ const store={
   set(k,v){try{localStorage.setItem('alharthia.'+k,JSON.stringify(v));return true}catch(e){return false}},
   del(k){try{localStorage.removeItem('alharthia.'+k)}catch(e){}}
 };
-const OS_VERSION='1.4';
+const OS_VERSION='1.7';
 const DEF={
   school:'ثانوية المتميزين في الحارثية', cls:'الصف الثالث متوسط -ج-',
   showSchool:true, showText:true, showLogo:true, strip:true, logo:null,
@@ -145,7 +145,7 @@ const DEF={
   contrast:false, reduceMotion:false, bigCursor:false, hideCursor:false, clickSound:false, osk:true, boldText:false,
   lang:'ar', dateFmt:'long', tz:'Asia/Baghdad', autoTime:true,
   pin:null, lockOnStart:false, lockSettings:false, lockStore:false,
-  startApp:'home', kbdLangs:['ar','en','fr'], kbdLang:'ar', oskMode:'auto', oskSize:'m', oskPreview:true, oskTopBtn:true, oskTermKeys:true, dock:['board','pdf','files','chromium','store'], hiddenApps:[], defaults:{pdf:'pdf',docx:'word',img:'viewer',video:'vlc'}, bootSound:true, offOn:false, offTime:'14:00', autoUpdate:true
+  startApp:'home', sideDir:'v', sidePos:null, kbdLangs:['ar','en','fr'], kbdLang:'ar', oskMode:'auto', oskSize:'m', oskPreview:true, oskTopBtn:true, oskTermKeys:true, dock:['board','pdf','files','chromium','store'], hiddenApps:[], defaults:{pdf:'pdf',docx:'word',img:'viewer',video:'vlc'}, bootSound:true, offOn:false, offTime:'14:00', autoUpdate:true
 };
 const S=Object.assign(structuredClone(DEF),store.get('settings',{}));
 let saveT=0;
@@ -317,7 +317,7 @@ function applyTheme(){
 }
 
 /* ---------------- navigation ---------------- */
-const TITLES={home:'',media:'مشغل الوسائط',term:'الطرفية',apps:'التطبيقات',board:'السبورة',pdf:'قارئ PDF',files:'مستكشف الملفات',office:'المستندات',browser:'Chromium',store:'متجر التطبيقات',timer:'المؤقت',attend:'الحضور والغياب',settings:'الإعدادات',gen:''};
+const TITLES={home:'',media:'مشغل الوسائط',term:'الطرفية',cast:'العرض اللاسلكي',apps:'التطبيقات',board:'السبورة',pdf:'قارئ PDF',files:'مستكشف الملفات',office:'المستندات',browser:'Chromium',store:'متجر التطبيقات',timer:'المؤقت',attend:'الحضور والغياب',settings:'الإعدادات',gen:''};
 let current='home';
 const onShow={}, onHide={};
 function go(id,arg){

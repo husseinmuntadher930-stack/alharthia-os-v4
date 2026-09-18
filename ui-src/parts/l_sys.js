@@ -219,17 +219,26 @@ function renderAbout(){
    ===================================================================== */
 function lockNow(){ layoutAll(); $('#lock').hidden=false; }
 $('#lock').onclick=async()=>{ if(S.pin&&!await pinPad('أدخل رمز القفل')) return; $('#lock').hidden=true; lastAct=Date.now(); };
+/* شاشة الإطفاء / إعادة التشغيل: الشعار + نص إنكليزي، وتبقى ظاهرة لحد ما ينطفي الجهاز.
+   after==='hold' يعني لا تنزل الشاشة أبداً (بالمعاينة فقط تنسد باللمس، بدون أي نص). */
 function sysMessage(txt,after,cb){
   const m=$('#sysMsg'); $('#sysTxt').textContent=txt; m.hidden=false; m.querySelector('.spin').hidden=false; m.onclick=null;
-  setTimeout(()=>{ if(cb){ cb(); return; } if(after==null){ m.hidden=true; return; } m.querySelector('.spin').hidden=true; $('#sysTxt').textContent=after; m.onclick=()=>{ m.hidden=true; m.onclick=null; }; },1800);
+  m.classList.toggle('power',after==='hold');
+  document.documentElement.classList.add('sysmsg');
+  const close=()=>{ m.hidden=true; m.onclick=null; m.classList.remove('power'); document.documentElement.classList.remove('sysmsg'); };
+  if(after==='hold'){
+    if(!(window.Native&&Native.on)) m.onclick=close;
+    return;
+  }
+  setTimeout(()=>{ if(cb){ cb(); return; } close(); },1800);
 }
 $('#tbKbd').onclick=()=>Keyboard.toggleEnabled();
 $('#tbPower').onclick=()=>modal({title:'خيارات التشغيل',iconName:'power',body:`<div class="power-grid">
     <button data-pw="lock">${icon('lock')}قفل الشاشة</button><button data-pw="restart">${icon('restart')}إعادة التشغيل</button><button data-pw="off" class="red">${icon('power')}إيقاف التشغيل</button></div>`,
   actions:[{label:'إلغاء',val:null,cls:'ghost'}],
   onOpen:(ov,done)=>ov.addEventListener('click',e=>{ const b=e.target.closest('[data-pw]'); if(!b) return; done(null); const a=b.dataset.pw;
-    if(a==='lock') lockNow(); if(a==='restart'){ Board.persist(); sysMessage('جاري إعادة التشغيل…','هذه معاينة — المس الشاشة للرجوع'); }
-    if(a==='off'){ Board.persist(); sysMessage('جاري حفظ العمل وإيقاف التشغيل…','هذه معاينة — المس الشاشة للرجوع'); } })});
+    if(a==='lock') lockNow(); if(a==='restart'){ Board.persist(); sysMessage('Restarting…','hold'); }
+    if(a==='off'){ Board.persist(); sysMessage('Shutting down…','hold'); } })});
 let lastAct=Date.now();
 ['pointerdown','keydown','wheel'].forEach(t=>addEventListener(t,()=>{lastAct=Date.now();},{passive:true,capture:true}));
 setInterval(()=>{ const mins=+S.sleep; if(!mins||!$('#lock').hidden||Timer.running()) return; if(Date.now()-lastAct>mins*60e3) lockNow(); },15e3);
@@ -285,7 +294,7 @@ function tick(){
   Extra.init();
   Attend.init();
   renderDock();
-  Keyboard.init(); Media.init(); AudioOut.init(); Term.init();
+  Keyboard.init(); Media.init(); AudioOut.init(); Term.init(); Side.init(); Cast.init(); Lang.apply(true);
   Native.init();
   const m=$('#sysMsg'); $('#sysTxt').textContent='جاري التشغيل…'; m.hidden=false; if(S.bootSound) setTimeout(()=>beep(1,523),200);
   setTimeout(()=>{ m.hidden=true; if(S.startApp&&S.startApp!=='home') go(S.startApp); if(S.lockOnStart) lockNow(); },700);

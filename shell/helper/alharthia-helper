@@ -89,6 +89,13 @@ def tz(zone):
     sys.exit(run(["timedatectl", "set-timezone", zone]))
 
 
+def airplay(state):
+    """Turns the AirPlay receiver on/off — lets iPhone/iPad mirror onto this screen."""
+    if state not in ("on", "off"):
+        die("bad state")
+    sys.exit(run(["systemctl", "start" if state == "on" else "stop", "alharthia-airplay"]))
+
+
 def main():
     if len(sys.argv) < 3:
         die("usage: alharthia-helper <action> <args>")
@@ -101,6 +108,8 @@ def main():
         fmt(*args)
     elif action == "timezone":
         tz(args[0])
+    elif action == "airplay":
+        airplay(args[0])
     else:
         die("unknown action")
 

@@ -8,7 +8,7 @@ install -d "${ROOTFS_DIR}/usr/lib/alharthia"
 install -m 755 files/app/helper/alharthia-helper "${ROOTFS_DIR}/usr/lib/alharthia/alharthia-helper"
 install -m 755 files/alharthia-session "${ROOTFS_DIR}/usr/bin/alharthia-session"
 install -m 755 files/alharthia-keyboard-setup "${ROOTFS_DIR}/usr/bin/alharthia-keyboard-setup"
-chmod 755 "${ROOTFS_DIR}/opt/alharthia/alharthia_osk.py" "${ROOTFS_DIR}/opt/alharthia/alharthia_btrecv.py"
+chmod 755 "${ROOTFS_DIR}/opt/alharthia/alharthia_osk.py" "${ROOTFS_DIR}/opt/alharthia/alharthia_share.py" "${ROOTFS_DIR}/opt/alharthia/alharthia_btrecv.py"
 # the old squeekboard keyboard is replaced by the Alharthia keyboard
 rm -f "${ROOTFS_DIR}/etc/xdg/autostart/sm.puri.Squeekboard.desktop"
 

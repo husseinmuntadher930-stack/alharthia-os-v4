@@ -14,7 +14,7 @@ import json, os, re, secrets, shutil, socket, subprocess, sys, threading, time, 
 from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse, parse_qs, quote
 
-VERSION = "1.4.4"
+VERSION = "1.7.0"
 HOST, PORT = "127.0.0.1", int(os.environ.get("ALH_PORT", "8765"))
 BASE = os.path.dirname(os.path.abspath(__file__))
 UI_DIR = os.path.join(BASE, "ui")
@@ -1096,6 +1096,48 @@ class Handler(BaseHTTPRequestHandler):
                 self.wfile.flush()
         except (BrokenPipeError, ConnectionResetError, OSError):
             return None
+
+    def api_share(self, m, q):
+        import alharthia_share as sh
+        if m == "POST":
+            b = self.jbody()
+            if "airplay" in b:
+                sh.airplay(bool(b["airplay"]))
+                return sh.status()
+            if "video" in b:
+                sh.video_start() if b["video"] else sh.video_stop()
+                return sh.status()
+            return sh.start() if b.get("on") else sh.stop()
+        return sh.status()
+
+    def api_share_incoming(self, m, q):
+        import alharthia_share as sh
+        data = sh.incoming_frame()
+        if not data:
+            return self.fail("ماكو عرض", 404)
+        self.send_response(200)
+        self.send_header("Content-Type", "image/jpeg")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(data)))
+        self.end_headers()
+        try:
+            self.wfile.write(data)
+        except OSError:
+            pass
+
+    def api_screenshot(self, m, q):
+        folder = os.path.join(HOME, FOLDERS["pics"])
+        os.makedirs(folder, exist_ok=True)
+        name = time.strftime("لقطة-%Y-%m-%d-%H%M%S.png")
+        path = os.path.join(folder, name)
+        tool = next((t for t in ("grim", "wayshot", "scrot") if has(t)), None)
+        if not tool:
+            raise RuntimeError("أداة اللقطات غير مثبتة — ثبّت grim")
+        args = {"grim": [tool, path], "wayshot": [tool, "-f", path], "scrot": [tool, path]}[tool]
+        code, out, err = run(args, timeout=20)
+        if code != 0 or not os.path.exists(path):
+            raise RuntimeError((err or out).strip()[:200] or "تعذر التقاط الشاشة")
+        return {"ok": True, "path": path, "name": name}
 
     def api_time_tz(self, m, q):
         tz = self.jbody()["tz"]

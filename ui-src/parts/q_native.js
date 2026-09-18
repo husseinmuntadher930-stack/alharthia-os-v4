@@ -102,8 +102,8 @@ const Native={
     const baseSys=sysMessage;
     sysMessage=function(txt,after,cb){
       baseSys(txt,after,cb);
-      if(/إيقاف التشغيل|انتهى الدوام/.test(txt)) setTimeout(()=>API.post('/api/power',{action:'off'}).catch(e=>toast(errMsg(e),false)),800);
-      else if(/إعادة التشغيل/.test(txt)) setTimeout(()=>API.post('/api/power',{action:'reboot'}).catch(e=>toast(errMsg(e),false)),800);
+      if(/Shutting down/i.test(txt)) setTimeout(()=>API.post('/api/power',{action:'off'}).catch(e=>toast(errMsg(e),false)),800);
+      else if(/Restarting/i.test(txt)) setTimeout(()=>API.post('/api/power',{action:'reboot'}).catch(e=>toast(errMsg(e),false)),800);
     };
     // status bar
     wifiBars=function(){ const w=self.wifi; if(!w||!w.enabled||!w.current) return 0; const n=w.nets.find(x=>x.active); const s=n?n.signal:60; return s>75?4:s>50?3:s>25?2:1; };

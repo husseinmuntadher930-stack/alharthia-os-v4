@@ -38,6 +38,7 @@ const APPS_BUILTIN=[
   {id:'ppt',n:'عروض PowerPoint',sub:'LibreOffice Impress',i:'slides',c:'#c2410c',office:'ppt'},
   {id:'excel',n:'جداول Excel',sub:'LibreOffice Calc',i:'table',c:'#16a34a',office:'excel'},
   {id:'store',n:'متجر التطبيقات',i:'store',c:'#7c3aed',go:'store'},
+  {id:'cast',n:'العرض اللاسلكي',sub:'اعرض شاشتك أو استقبل شاشة',i:'cast',c:'#0891b2',go:'cast'},
   {id:'media',n:'مشغل الوسائط',sub:'فيديو وصوت MP4 · MP3',i:'video',c:'#db2777',go:'media'},
   {id:'terminal',n:'الطرفية',sub:'Terminal',i:'terminal',c:'#1f2937',go:'term'},
   {id:'chromiumfull',n:'Chromium الكامل',sub:'المتصفح الأصلي',i:'globe',c:'#1e40af',native:'chromium'},

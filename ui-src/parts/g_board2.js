@@ -3,7 +3,7 @@
    WHITEBOARD — controller
    ===================================================================== */
 const PEN_KINDS=[['pen','قلم عادي','pen'],['fountain','قلم حبر','fountain'],['callig','قلم خط عربي','nib'],['hl','قلم تظليل','marker'],['laser','قلم ليزر','laser']];
-const SHAPE_KINDS=[['line','خط'],['dline','خط متقطع'],['arrow','سهم'],['darrow','سهم مزدوج'],['rect','مستطيل'],['circle','دائرة'],['ellipse','بيضوي'],['triangle','مثلث'],['rtri','مثلث قائم'],['diamond','معيّن'],['pentagon','خماسي'],['hexagon','سداسي'],['star','نجمة']];
+const SHAPE_KINDS=[['line','خط'],['semi','نصف دائرة'],['dline','خط متقطع'],['arrow','سهم'],['darrow','سهم مزدوج'],['rect','مستطيل'],['circle','دائرة'],['ellipse','بيضوي'],['triangle','مثلث'],['rtri','مثلث قائم'],['diamond','معيّن'],['pentagon','خماسي'],['hexagon','سداسي'],['star','نجمة']];
 const INST_DEF={
   ruler:{n:'مسطرة ٣٠ سم',i:'ruler',w:30*PXCM+48,h:92},
   sq45:{n:'مثلث قائم ٤٥°',i:'setsq',w:16*PXCM,h:16*PXCM},
@@ -47,7 +47,7 @@ const Board={
     for(const x of [this.xBg,this.xBase,this.xLive]){ x.setTransform(d,0,0,d,0,0); x.imageSmoothingQuality='high'; }
     this.renderBg(); this.redraw(); this.layoutInst(); this.updateSelUI();
   },
-  renderBg(){ drawBg(this.xBg,this.page.bg,this.W,this.H,()=>this.renderBg()); this.area.style.background=''; },
+  renderBg(){ if(this.overlay){ this.xBg.clearRect(-9e4,-9e4,2e5,2e5); this.area.style.background='transparent'; return; } drawBg(this.xBg,this.page.bg,this.W,this.H,()=>this.renderBg()); this.area.style.background=''; },
   redraw(exclude){
     const x=this.xBase; x.save(); x.setTransform(1,0,0,1,0,0); x.clearRect(0,0,this.cBase.width,this.cBase.height); x.restore();
     for(const it of this.page.items){ if(exclude&&exclude.has(it.id)) continue; if(it.t==='clear') continue; drawItem(x,it,this.W,()=>this.redraw()); }

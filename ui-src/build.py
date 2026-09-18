@@ -9,7 +9,7 @@ ROOT = os.path.dirname(HERE)
 P = lambda *a: os.path.join(HERE, *a)
 PARTS = ['a_head.html', 'b_css.html', 'c_css.html', 'd_body.html', 'e_core.js', 'f_brand.js',
          'g_board1.js', 'g_board2.js', 'g_board3.js', 'g_board4.js', 'h_pdf.js', 'i_fs.js', 'j_office.js',
-         'k_store.js', 'm_ported.js', 'n_extra.js', 'o_apps.js', 'p_attend.js', 's_media.js', 't_picker.js', 'u_term.js', 'q_native.js', 'r_keyboard.js', 'l_sys.js']
+         'k_store.js', 'm_ported.js', 'n_extra.js', 'o_apps.js', 'p_attend.js', 's_media.js', 't_picker.js', 'u_term.js', 'w_side.js', 'z_qr.js', 'x_cast.js', 'y_lang.js', 'q_native.js', 'r_keyboard.js', 'l_sys.js']
 ASSETS = {'__LOGO__': 'logo.b64', '__DEMOPDF__': 'demo.b64', '__DOCX__': 'sample.docx.b64',
           '__XLSX__': 'sample.xlsx.b64', '__PPTX__': 'sample.pptx.b64'}
 

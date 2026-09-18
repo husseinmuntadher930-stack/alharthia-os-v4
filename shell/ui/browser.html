@@ -253,9 +253,13 @@ html[data-theme=dark] .chip.on{color:#fff}
 #lock .l-class{font-size:min(6vh,56px);font-weight:700}
 #lock .l-hint{position:absolute;bottom:5vh;opacity:.7;display:flex;gap:8px;align-items:center;font-size:17px;animation:pulse 2s infinite}
 @keyframes pulse{50%{opacity:.35}}
-#sysMsg{position:fixed;inset:0;z-index:130;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
+#sysMsg{position:fixed;inset:0;z-index:200;background:#050a1c;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;font-size:20px}
 #sysMsg img{width:130px;border-radius:50%}
 #sysMsg .wm{font-size:28px;font-weight:700;direction:ltr}#sysMsg .wm b{color:var(--acc)}
+#sysMsg #sysTxt{direction:ltr;letter-spacing:.3px;opacity:.85}
+#sysMsg.power #sysTxt{font-size:24px;opacity:1}
+#sysMsg.power img{width:150px}
+html.sysmsg #sideWrap,html.sysmsg #osk,html.sysmsg #toast,html.sysmsg #qp{display:none!important}
 .spin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(128,128,128,.25);border-top-color:var(--acc);animation:rot .8s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 
@@ -602,6 +606,71 @@ html[data-theme=dark] #osk,#osk.dk{--kb-bg:#1c1d21;--kb-key:#3a3b40;--kb-fn:#2a2
 #tbKbd.off{opacity:.45}
 .st-wifi .wf path{transition:opacity .2s}
 @media (max-width:760px){.osk-m,.osk-l{--kh:46px;--kg:5px}.ol{padding:0 8px}}
+html.lang-en{--font:"IBM Plex Sans Arabic","Segoe UI",system-ui,sans-serif}
+/* ============ wireless sharing ============ */
+.cast-live{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:99px;background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok);font-weight:600}
+.cast-url{margin-top:14px;padding:16px;border-radius:16px;background:var(--surface-2);text-align:center}
+.cast-url b{display:block;font-size:clamp(18px,3vw,28px);margin-top:6px;word-break:break-all;color:var(--head);user-select:text}
+.cast-steps{margin:6px 0 0;padding-inline-start:22px;color:var(--text-2);line-height:2}
+.cast-in{margin-top:14px}
+.cast-in img{width:100%;max-height:46vh;object-fit:contain;background:#000;border-radius:16px}
+.cast-qr{display:flex;align-items:center;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.cast-qr canvas{width:190px;height:190px;background:#fff;padding:10px;border-radius:16px;box-shadow:0 6px 20px rgba(0,0,0,.18);image-rendering:pixelated}
+.cast-qr .qr-tip{max-width:260px;text-align:start;color:var(--text-2);line-height:1.9;font-size:15px}
+.cast-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;background:var(--surface-2);color:var(--text-2);font-size:13px;margin-inline-start:8px}
+.cast-tag.ok{background:color-mix(in srgb,var(--ok) 16%,transparent);color:var(--ok)}
+#castFull{position:fixed;inset:0;z-index:170;background:#000;display:grid;place-items:center}
+#castFull img{width:100%;height:100%;object-fit:contain}
+#castFull .btn{position:fixed;top:16px;inset-inline-start:16px;background:rgba(255,255,255,.14);color:#fff}
+/* ============ side drawer + draw over screen ============ */
+#sideWrap{position:fixed;inset:0;pointer-events:none;z-index:165}
+#sideWrap>*{pointer-events:auto}
+.side-h{position:fixed;top:50%;transform:translateY(-50%);width:26px;height:74px;display:grid;place-items:center;font-size:17px;color:#fff;background:color-mix(in srgb,var(--pri) 78%,#000);box-shadow:0 4px 14px rgba(0,0,0,.3);opacity:.85;transition:opacity .2s,transform .2s}
+.side-h:active{opacity:1}
+.side-h.r{right:0;border-radius:14px 0 0 14px}
+.side-h.l{left:0;border-radius:0 14px 14px 0}
+.side-h.hide{opacity:0;pointer-events:none}
+#sidePanel{position:fixed;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;padding:10px 8px;background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line);animation:sideIn .18s ease-out}
+#sidePanel.side-r{right:10px}
+#sidePanel.side-l{left:10px}
+@keyframes sideIn{from{opacity:0;transform:translateY(-50%) scale(.9)}to{opacity:1;transform:translateY(-50%) scale(1)}}
+.side-b{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-size:24px;color:var(--text-2);background:var(--surface-2)}
+.side-b:active{background:var(--surface-3)}
+.side-b.on{background:var(--acc);color:#fff}
+.side-b.danger{color:var(--danger)}
+.side-sep{height:1px;background:var(--line);margin:2px 6px}
+#sidePanel.horiz{flex-direction:row;align-items:center}
+#sidePanel.horiz .side-sep{width:1px;height:34px;margin:0 3px}
+#sidePanel.free{transform:none!important}
+.side-b.grip{width:38px;height:38px;font-size:18px;color:var(--muted);background:transparent;cursor:grab;touch-action:none}
+#sidePanel.horiz .side-b.grip{width:26px;height:44px}
+#sidePop{position:fixed;left:0;top:0;width:min(320px,calc(100vw - 96px));max-height:86vh;overflow-y:auto;background:var(--surface);border-radius:20px;box-shadow:var(--shadow-lg);border:1px solid var(--line);padding:14px;animation:sideIn .18s ease-out}
+#sidePop h5{margin:0 0 10px;display:flex;align-items:center;gap:8px;font-size:15px;color:var(--head)}
+.sp-colors{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.sp-c{width:36px;height:36px;border-radius:50%;background:var(--c);border:2px solid var(--line)}
+.sp-c.on{outline:3px solid var(--acc);outline-offset:2px}
+.sp-c.wheel{background:conic-gradient(red,#ff0,#0f0,#0ff,#00f,#f0f,red)}
+.sp-row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.sp-row input{flex:1;min-width:0}
+.sp-opts{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.sp-o{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;background:var(--surface-2);font-size:14px;font-weight:500;text-align:start}
+.sp-o svg{font-size:20px;color:var(--muted);flex:none}
+.sp-o.on{background:color-mix(in srgb,var(--acc) 16%,var(--surface-2));outline:2px solid var(--acc)}
+.sp-o.on svg{color:var(--acc)}
+.sp-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+/* draw over the frozen screen */
+#board.annot-mode{position:fixed;inset:0;z-index:150;background:transparent;display:flex}
+#board.annot-mode #boardStrip,#board.annot-mode #boardDock,#board.annot-mode #focusBtn,#board.annot-mode #bPop{display:none!important}
+#board.annot-mode #boardArea{background:transparent}
+html.annot #os{pointer-events:none}
+html.annot #sideWrap>*,html.annot #board.annot-mode{pointer-events:auto}
+html.annot #toast{z-index:200}
+/* ============ bluetooth transfer card ============ */
+#btReq.xfer .hd .grow{flex:1;min-width:0}
+#btReq .icon-btn.sm{width:36px;height:36px;font-size:16px}
+#btReq .ic.pulse{animation:btPulse 1.4s ease-in-out infinite}
+@keyframes btPulse{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.45)}50%{box-shadow:0 0 0 9px rgba(37,99,235,0)}}
+#btReq .xf-row{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
 /* ============ terminal ============ */
 #term{background:#0b1020}
 #term .term-tabs{background:#141a2e;padding:6px 10px 0;align-items:flex-end;gap:10px;justify-content:space-between}

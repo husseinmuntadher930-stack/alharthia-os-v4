@@ -1,7 +1,7 @@
 #!/bin/bash -e
 # Alharthia OS — name, boot splash and Raspberry Pi 5 / NVMe settings
-sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Alharthia OS 1.4 (Raspberry Pi OS based)"/' "${ROOTFS_DIR}/etc/os-release"
-printf 'Alharthia OS 1.4 \\n \\l\n\n' > "${ROOTFS_DIR}/etc/issue"
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="Alharthia OS 1.7 (Raspberry Pi OS based)"/' "${ROOTFS_DIR}/etc/os-release"
+printf 'Alharthia OS 1.7 \\n \\l\n\n' > "${ROOTFS_DIR}/etc/issue"
 echo 'Alharthia OS — ثانوية المتميزين في الحارثية' > "${ROOTFS_DIR}/etc/motd"
 
 T="${ROOTFS_DIR}/usr/share/plymouth/themes/alharthia"
